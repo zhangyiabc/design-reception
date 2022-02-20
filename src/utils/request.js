@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import { message } from 'ant-design-vue';
 const service = axios.create({
   timeout: 5000
 })
@@ -19,7 +19,7 @@ service.interceptors.response.use(
     return res
   },
   err => {
-    this.$message.error(err.msg)
+    message.error(err.msg)
     return Promise.reject(err)
   }
 )

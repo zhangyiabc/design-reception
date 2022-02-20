@@ -9,9 +9,18 @@
       </div>
     </div>
     <div class="input-box">
-      <input type="text" placeholder="账号" />
-      <input
+      <a-input
+        class="inputBox"
+        type="text"
+        name="user"
+        v-model="username"
+        placeholder="账号"
+      />
+      <a-input
+        class="inputBox"
+        name="user"
         type="password"
+        v-model="password"
         placeholder="密码"
         @focus="handleFocus"
         @blur="handleBlur"
@@ -23,6 +32,8 @@
 </template>
 
 <script>
+import store from "@/store";
+
 export default {
   data() {
     return {
@@ -33,13 +44,29 @@ export default {
   },
   mounted() {},
   methods: {
-    handleLogin() {},
-    handleFocus(){
-      this.hasPassword = true
+    handleLogin() {
+      if (!this.username || !this.password) {
+        this.$message.error("请检查账号是否完整");
+        return;
+      }
+      // 触发action
+      store
+        .dispatch("user/login", {
+          username: this.username,
+          password: this.password,
+        })
+        .then(() => {
+          // 此时登录成功
+          store.dispatch("setting/setShow", false);
+          store.dispatch('user/getUserInfo')
+        });
     },
-    handleBlur(){
-      this.hasPassword = false
-    }
+    handleFocus() {
+      this.hasPassword = true;
+    },
+    handleBlur() {
+      this.hasPassword = false;
+    },
   },
 };
 </script>
@@ -50,7 +77,7 @@ export default {
   display: flex;
   flex-direction: column;
 }
-.input-box input {
+.input-box .inputBox {
   height: 40px;
   border-radius: 3px;
   /* 缩进15像素 */
@@ -59,7 +86,7 @@ export default {
   border: 1px solid #d9d9d9;
   margin-bottom: 15px;
 }
-.input-box input:focus {
+.input-box .inputBox:focus {
   outline: 1px solid lightseagreen;
 }
 .input-box button {

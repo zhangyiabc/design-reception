@@ -46,6 +46,8 @@
       <div class="search">
         <a-input-search
           v-model="inputText"
+          defaultValue=""
+          autocomplete="nope"
           class="input-search"
           placeholder="搜索文章、用户"
           enter-button="Search"
@@ -59,26 +61,28 @@
         <a-button type="primary" @click="handleClick"> 开始创作 </a-button>
       </div>
       <div class="message">
-        <!-- <a-dropdown>
-          <a class="ant-dropdown-link" @click="(e) => e.preventDefault()">
-            Hover me, Click menu item <a-icon type="down" />
-          </a>
-          <a-menu slot="overlay" @click="handleMenuClick">
-            <a-menu-item key="1"> 1st menu item </a-menu-item>
-            <a-menu-item key="2"> 2nd menu item </a-menu-item>
-            <a-menu-item key="3"> 3rd menu item </a-menu-item>
-          </a-menu>
-        </a-dropdown> -->
         <a-badge :count="count">
           <a-icon class="icon-font" type="message" theme="twoTone" />
         </a-badge>
       </div>
       <div class="login-btn">
-        <a-button @click="handleLogin">登录</a-button>
+        <a-button v-if="!userInfo.id" @click="handleLogin">登录</a-button>
+        <a-dropdown v-if="userInfo.id">
+          <a-avatar :size="58" icon="user" :src='userInfo.UserInfo.avatar' />
+          <a-menu class="menus" slot="overlay" @click="handleMenuClick">
+            <a-menu-item key="1"><a-icon class=".menu-ico" type="edit" /> <span  @click="handleClick">写文章</span>  </a-menu-item>
+            <a-menu-divider />
+            <a-menu-item key="2"><a-icon class=".menu-ico" type="home" /> 我的主页 </a-menu-item>
+            <a-menu-item key="3"><a-icon class=".menu-ico" type="github" /> GitHub </a-menu-item>
+            <a-menu-item key="4"><a-icon class=".menu-ico" type="wechat" /> 联系我 </a-menu-item> 
+            <a-menu-divider />
+            <a-menu-item key="5"> <a-icon class=".menu-ico" type="poweroff" /> 退出 </a-menu-item>
+          </a-menu>
+        </a-dropdown>
       </div>
     </div>
-    <div v-show="isShowLogin" class="login" @click="handleCancel">
-      <Mantle >
+    <div v-if="isShowLogin" class="login" @click="handleCancel">
+      <Mantle>
         <template>
           <Login />
         </template>
@@ -88,6 +92,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import Login from "@/components/Login/index.vue";
 import Mantle from "@/components/Mantle/index.vue";
 import store from "@/store";
@@ -96,9 +101,18 @@ export default {
     Login,
     Mantle,
   },
+  computed: {
+    ...mapGetters({
+      isShowLogin: "isShowMask",
+      userInfo: "info",
+    }),
+  },
+  mounted(){
+    console.log(this.userInfo)
+  },
   data() {
     return {
-      isShowLogin:false,
+      // isShowLogin:false,
       count: 10,
       inputText: store.getters.key || "",
     };
@@ -112,6 +126,7 @@ export default {
       if (!value) {
         return;
       }
+      console.log(value);
       store.dispatch("search/changeKey", value);
       // 跳转到search页面
       this.$router.push({
@@ -122,24 +137,24 @@ export default {
       });
     },
     handleClick() {
-      console.log("点击了创建文章");
       this.$router.push({
         name: "Editor",
       });
     },
     handleLogin() {
-      console.log("点击了登录");
-      this.isShowLogin = true
+      // this.isShowLogin = true;
+      this.$store.dispatch("setting/setShow", true);
     },
     handleMenuClick(value) {
       console.log(value);
     },
-    handleCancel(e){
-      if(e.target.className != 'mantle-container'){
-        return 
+    handleCancel(e) {
+      if (e.target.className != "mantle-container") {
+        return;
       }
-      this.isShowLogin = false
-    }
+      // this.isShowLogin = false;
+      this.$store.dispatch("setting/setShow", false);
+    },
   },
 };
 </script>
@@ -202,5 +217,11 @@ export default {
   width: 60px;
   height: 60px;
   margin-right: 10px;
+}
+.menus{
+  font-size: 14.4px;
+  .menus .menu-ico{
+    font-size: 14.4px;
+  }
 }
 </style>

@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import getters from './getters'
 import search from './modules/search'
+import user from './modules/user'
+import setting from './modules/setting'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -12,7 +14,9 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
-    search
+    search,
+    user,
+    setting
   },
   getters
 })
