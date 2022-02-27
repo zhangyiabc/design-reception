@@ -1,14 +1,14 @@
 <template>
   <div class="editor-container">
     <div class="header">
-      <a-input class="inputBox" placeholder="请输入标题" v-model="title" />
+      <a-input class="inputBox" placeholder="请输入标题" v-model.trim="article.title" />
       <div class="right">
         <div class="btns">
           <a-button type="danger" @click="handleOut"> 退出 </a-button>
           <a-button type="primary" @click="handlePublish"> 发布 </a-button>
         </div>
         <div class="avatar">
-          <a-avatar :size="45" icon="user" />
+          <a-avatar :size="45" icon="user" :src="avatarUrl" />
         </div>
       </div>
     </div>
@@ -16,147 +16,88 @@
     <div class="explain">字数</div>
     <div>
       <a-drawer
-        title="Create a new account"
+        title="发布文章"
         :width="720"
         :visible="visible"
         :body-style="{ paddingBottom: '80px' }"
         @close="onClose"
       >
-        <a-form :form="form" layout="vertical" hide-required-mark>
-          <a-row :gutter="16">
-            <a-col :span="12">
-              <a-form-item label="Name">
-                <a-input
-                  v-decorator="[
-                    'name',
-                    {
-                      rules: [
-                        { required: true, message: 'Please enter user name' },
-                      ],
-                    },
-                  ]"
-                  placeholder="Please enter user name"
-                />
-              </a-form-item>
-            </a-col>
-            <a-col :span="12">
-              <a-form-item label="Url">
-                <a-input
-                  v-decorator="[
-                    'url',
-                    {
-                      rules: [{ required: true, message: 'please enter url' }],
-                    },
-                  ]"
-                  style="width: 100%"
-                  addon-before="http://"
-                  addon-after=".com"
-                  placeholder="please enter url"
-                />
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row :gutter="16">
-            <a-col :span="12">
-              <a-form-item label="Owner">
-                <a-select
-                  v-decorator="[
-                    'owner',
-                    {
-                      rules: [
-                        { required: true, message: 'Please select an owner' },
-                      ],
-                    },
-                  ]"
-                  placeholder="Please a-s an owner"
+        <a-form
+          :form="form"
+          :layout="formLayout"
+          hide-required-mark
+          labelAlign="right"
+        >
+          <a-form-item
+            label="标签分类:"
+            :label-col="{
+              span: 4,
+            }"
+            :wrapper-col="{
+              offset: 4,
+            }"
+          >
+            <div class="select">
+              <template v-for="info in tags">
+                <a-checkable-tag
+                  class="check"
+                  :key="info.id"
+                  :checked="selectedTags.indexOf(info.id) > -1"
+                  @change="(checked) => handleTagChange(info, checked)"
                 >
-                  <a-select-option value="xiao"> Xiaoxiao Fu </a-select-option>
-                  <a-select-option value="mao"> Maomao Zhou </a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :span="12">
-              <a-form-item label="Type">
-                <a-select
-                  v-decorator="[
-                    'type',
-                    {
-                      rules: [
-                        { required: true, message: 'Please choose the type' },
-                      ],
-                    },
-                  ]"
-                  placeholder="Please choose the type"
-                >
-                  <a-select-option value="private"> Private </a-select-option>
-                  <a-select-option value="public"> Public </a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row :gutter="16">
-            <a-col :span="12">
-              <a-form-item label="Approver">
-                <a-select
-                  v-decorator="[
-                    'approver',
-                    {
-                      rules: [
-                        {
-                          required: true,
-                          message: 'Please choose the approver',
-                        },
-                      ],
-                    },
-                  ]"
-                  placeholder="Please choose the approver"
-                >
-                  <a-select-option value="jack"> Jack Ma </a-select-option>
-                  <a-select-option value="tom"> Tom Liu </a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :span="12">
-              <a-form-item label="DateTime">
-                <a-date-picker
-                  v-decorator="[
-                    'dateTime',
-                    {
-                      rules: [
-                        {
-                          required: true,
-                          message: 'Please choose the dateTime',
-                        },
-                      ],
-                    },
-                  ]"
-                  style="width: 100%"
-                  :get-popup-container="(trigger) => trigger.parentNode"
-                />
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row :gutter="16">
-            <a-col :span="24">
-              <a-form-item label="Description">
-                <a-textarea
-                  v-decorator="[
-                    'description',
-                    {
-                      rules: [
-                        {
-                          required: true,
-                          message: 'Please enter url description',
-                        },
-                      ],
-                    },
-                  ]"
-                  :rows="4"
-                  placeholder="please enter url description"
-                />
-              </a-form-item>
-            </a-col>
-          </a-row>
+                  {{ info.tag }}
+                </a-checkable-tag>
+              </template>
+            </div>
+          </a-form-item>
+          <a-form-item
+            label="文章封面："
+            :label-col="{
+              span: 4,
+            }"
+            :wrapper-col="{
+              offset: 4,
+            }"
+          >
+            <a-upload
+              :customRequest="handleUpload"
+              list-type="picture-card"
+              :file-list="fileList"
+              @preview="handlePreview"
+              :remove="deleteFileItem"
+            >
+              <div v-if="fileList.length < 1">
+                <a-icon type="plus" />
+                <div class="ant-upload-text">Upload</div>
+              </div>
+            </a-upload>
+            <a-modal
+              :visible="previewVisible"
+              :footer="null"
+              @cancel="handleCancel"
+            >
+              <img alt="example" style="width: 100%" :src="previewImage" />
+            </a-modal>
+          </a-form-item>
+          <a-form-item
+            label="编辑摘要："
+            :label-col="{
+              span: 4,
+            }"
+            :wrapper-col="{
+              offset: 4,
+            }"
+          >
+            <a-textarea
+              v-model="article.abstract"
+              :min-length="0"
+              :max-length="100"
+              :rows="4"
+              placeholder="请输入文章摘要"
+            >
+            </a-textarea>
+            <span>{{ abstractLength }} / 100</span>
+          </a-form-item>
         </a-form>
         <div
           :style="{
@@ -172,9 +113,11 @@
           }"
         >
           <a-button :style="{ marginRight: '8px' }" @click="onClose">
-            Cancel
+            取消
           </a-button>
-          <a-button type="primary" @click="onClose"> Submit </a-button>
+          <a-button type="primary" @click="onHandlePublish">
+            确认并发布
+          </a-button>
         </div>
       </a-drawer>
     </div>
@@ -182,6 +125,9 @@
 </template>
 
 <script>
+import { upload } from "@/apis/upload";
+import { getAllLabel } from "@/apis/label";
+import { addArticle } from "@/apis/article";
 import E from "wangeditor";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
@@ -191,7 +137,32 @@ export default {
       title: "",
       form: this.$form.createForm(this),
       visible: false,
+      tags: [],
+      selectedTags: [],
+      editor: "",
+      fileList: [],
+      formLayout: "horizontal",
+      article: {
+        abstract: "",
+        title:"",
+        content:"",
+        cover:"",
+        LabelId:""
+      },
+      previewImage: "",
+      previewVisible: false,
     };
+  },
+  computed: {
+    avatarUrl() {
+      return this.$store.getters.info.UserInfo.avatar || "";
+    },
+    abstractLength() {
+      return this.article.abstract.length;
+    },
+  },
+  created() {
+    this.getLabelList();
   },
   mounted() {
     this.editor = new E(this.$refs.editor);
@@ -221,14 +192,17 @@ export default {
       "redo",
     ];
     this.editor.highlight = hljs;
-    this.editor.config.zIndex = 2
+    this.editor.config.zIndex = 2;
     this.editor.config.languageTab = "    ";
     this.editor.config.height = 600;
-    this.editor.config.showLinkImg = false
-    this.editor.config.customUploadImg = this.diyUploadImg
+    this.editor.config.showLinkImg = false;
+    this.editor.config.customUploadImg = this.diyUploadImg;
     this.editor.create();
   },
   methods: {
+    handleCancel() {
+      this.previewVisible = false;
+    },
     handleOut() {
       console.log("点击退出");
       this.$router.push({
@@ -236,19 +210,99 @@ export default {
       });
     },
     handlePublish() {
-      console.log("发布");
       this.visible = true;
-      const html = this.editor.txt.html()
-      console.log(html)
+      const html = this.editor.txt.html();
+      this.article.content = html
     },
 
     onClose() {
       this.visible = false;
     },
-    diyUploadImg(resultFiles, insertImgFn){
-      console.log(resultFiles)
-      console.log(insertImgFn)
-    }
+    onHandlePublish() {
+      console.log("发布文章");
+      console.log(this.article)
+      // 1. 验证表单 -- 标签、摘要
+      
+      // 2. 验证内容 -- 标题、内容
+      if(this.hasValue(this.article)){
+        // 每一项都有值
+        // 3. 发送ajax请求，跳转页面
+        addArticle(this.article).then(res => {
+          console.log(res)
+          // 跳转页面
+
+        })
+      }
+      
+    },
+    // 验证对象中属性是否全部有值
+    hasValue(obj){
+      for (const key in obj) {
+        if (Object.hasOwnProperty.call(obj, key)) {
+          const value = obj[key];
+          if(key === 'abstract' && value.length < 20){
+            return false
+          }
+          if(!value){
+            return false
+          }
+        }
+      }
+      return true
+    },
+    // 自定义富文本图片上传
+    diyUploadImg(resultFiles, insertImgFn) {
+      console.log(resultFiles[0]);
+      const formData = new FormData();
+      formData.append("file", resultFiles[0]);
+      formData.append("name", this.$store.getters.info.username);
+      upload(formData).then((res) => {
+        insertImgFn(res.data);
+      });
+    },
+    handleTagChange(tag, check) {
+      if (check) {
+        this.selectedTags = [tag.id];
+        this.article.LabelId = tag.id
+      }
+    },
+    getLabelList() {
+      getAllLabel().then((res) => {
+        this.tags = res.data;
+      });
+    },
+    handleUpload(info) {
+      // 初始化
+      const fileInfo = {
+        uid: info.file.uid,
+        name: info.file.name,
+        status: "uploading",
+        response: "",
+        url: "",
+      };
+      this.fileList.push(fileInfo);
+      const formData = new FormData();
+      formData.append("file", info.file);
+      formData.append("name", this.$store.getters.info.username);
+
+      upload(formData).then((res) => {
+        fileInfo.status = "done";
+        fileInfo.response = res.msg;
+        fileInfo.url = res.data;
+        this.article.cover = res.data
+      });
+    },
+    handlePreview(file) {
+      this.previewVisible = true;
+      this.previewImage = file.url;
+    },
+    deleteFileItem(file) {
+      //找到当前文件所在列表的索引
+      let index = this.fileList.indexOf(file);
+      //从列表中移除该文件
+      this.fileList.splice(index, 1);
+      return true;
+    },
   },
 };
 </script>
@@ -281,5 +335,8 @@ export default {
       align-items: center;
     }
   }
+}
+.check {
+  border: 1px solid #f1f1f1;
 }
 </style>

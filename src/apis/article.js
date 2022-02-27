@@ -9,6 +9,15 @@ const getAllArticle = (data) => {
   })
 }
 
+const addArticle = (data) => {
+  return request({
+    url: "/api/article",
+    method: "POST",
+    data: data
+  })
+}
+
 export {
-  getAllArticle
+  getAllArticle,
+  addArticle
 }
