@@ -197,6 +197,7 @@ export default {
     this.editor.config.height = 600;
     this.editor.config.showLinkImg = false;
     this.editor.config.customUploadImg = this.diyUploadImg;
+    this.editor.config.onCatalogChange = this.CatalogChange
     this.editor.create();
   },
   methods: {
@@ -219,18 +220,25 @@ export default {
       this.visible = false;
     },
     onHandlePublish() {
-      console.log("发布文章");
-      console.log(this.article)
       // 1. 验证表单 -- 标签、摘要
-      
+      console.log(this.article)
       // 2. 验证内容 -- 标题、内容
       if(this.hasValue(this.article)){
         // 每一项都有值
         // 3. 发送ajax请求，跳转页面
         addArticle(this.article).then(res => {
           console.log(res)
+          // 弹出消息
+          if(res.code == '200'){
+            this.$message.success("发布成功！")
+          }
+          // 设置store
+          this.$store.dispatch('article/changeTitle',this.article.title)
           // 跳转页面
-
+          this.$router.push({
+            path:"/published"
+          })
+          // 
         })
       }
       
@@ -241,6 +249,7 @@ export default {
         if (Object.hasOwnProperty.call(obj, key)) {
           const value = obj[key];
           if(key === 'abstract' && value.length < 20){
+            this.$message.warn('摘要不能少于20字')
             return false
           }
           if(!value){
@@ -303,6 +312,9 @@ export default {
       this.fileList.splice(index, 1);
       return true;
     },
+    CatalogChange(headList){
+      console.log(headList)
+    }
   },
 };
 </script>

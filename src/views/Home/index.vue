@@ -34,8 +34,7 @@
                 </template>
               </div>
               <div v-if="isLoading">
-                <a-spin class="spin" size="large"  tip="玩命加载中..." />
-
+                <a-spin class="spin" size="large" tip="玩命加载中..." />
               </div>
               <div class="pager">
                 <a-pagination
@@ -60,6 +59,7 @@ import { getAllLabel } from "@/apis/label";
 import { sentence } from "@/apis/sentence";
 import BlogCard from "@/components/blogCard/index.vue";
 import { getAllArticle } from "@/apis/article";
+import store from "@/store";
 export default {
   components: {
     Layout,
@@ -88,17 +88,20 @@ export default {
   watch: {
     $route(to) {
       this.selectedTags = [+to.query.tag];
-      this.reqBody.LabelId = +to.query.tag || 'all';
+      this.reqBody.LabelId = +to.query.tag || "all";
       this.getBlogList();
     },
   },
   created() {
-    // console.log(this.$route);
     this.selectedTags = [+this.$route.query.tag];
     this.reqBody.LabelId = +this.$route.query.tag || "all";
     this.getSentence();
-    this.getLabelList();
     this.getBlogList();
+    if (store.getters.tags.length == 0) {
+      this.getLabelList();
+    } else {
+      this.tags = store.getters.tags;
+    }
   },
   methods: {
     getSentence() {
@@ -109,6 +112,7 @@ export default {
     getLabelList() {
       getAllLabel().then((res) => {
         this.tags = res.data;
+        store.dispatch("label/setTags", res.data);
       });
     },
     handleChange(tag, check) {
@@ -158,7 +162,7 @@ export default {
 .home-container {
   height: 100%;
   .home-content {
-    height: 100%;
+    // height: 100%;
     background-color: rgb(244, 245, 245);
     padding-bottom: 50px;
   }
@@ -208,13 +212,13 @@ export default {
   .blog {
     width: 80%;
     margin: 0 auto;
-    
+
     .left-blog {
       width: 70%;
-      .blog-container{
+      .blog-container {
         margin-bottom: 20px;
       }
-      .spin{
+      .spin {
         position: absolute;
         top: 50%;
         left: 50%;

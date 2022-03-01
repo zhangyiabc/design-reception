@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { message } from 'ant-design-vue';
 const service = axios.create({
-  timeout: 5000
+  timeout: 50000
 })
 
 service.interceptors.request.use(

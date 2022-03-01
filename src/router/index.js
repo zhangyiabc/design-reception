@@ -20,6 +20,11 @@ const routes = [
     path: "/editor",
     name: "Editor",
     component: () => import('../views/Editor/index.vue')
+  },
+  {
+    path:"/published",
+    name:"Published",
+    component:() => import('../views/Published/index.vue')
   }
 ]
 
