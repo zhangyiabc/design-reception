@@ -1,7 +1,11 @@
 <template>
   <div class="editor-container">
     <div class="header">
-      <a-input class="inputBox" placeholder="请输入标题" v-model.trim="article.title" />
+      <a-input
+        class="inputBox"
+        placeholder="请输入标题"
+        v-model.trim="article.title"
+      />
       <div class="right">
         <div class="btns">
           <a-button type="danger" @click="handleOut"> 退出 </a-button>
@@ -121,6 +125,9 @@
         </div>
       </a-drawer>
     </div>
+    <div class="outline-container">
+      <Outline  v-if="showOutline" :list="handList" />
+    </div> 
   </div>
 </template>
 
@@ -131,12 +138,14 @@ import { addArticle } from "@/apis/article";
 import E from "wangeditor";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
+import Outline from '../Outline/index.vue'
 export default {
   data() {
     return {
       title: "",
       form: this.$form.createForm(this),
       visible: false,
+      showOutline:true,
       tags: [],
       selectedTags: [],
       editor: "",
@@ -144,14 +153,18 @@ export default {
       formLayout: "horizontal",
       article: {
         abstract: "",
-        title:"",
-        content:"",
-        cover:"",
-        LabelId:""
+        title: "",
+        content: "",
+        cover: "",
+        LabelId: "",
       },
       previewImage: "",
       previewVisible: false,
+      handList:[]
     };
+  },
+  components:{
+    Outline
   },
   computed: {
     avatarUrl() {
@@ -166,7 +179,26 @@ export default {
   },
   mounted() {
     this.editor = new E(this.$refs.editor);
+    const that = this
+    const { $, BtnMenu} = E;
+    class OutlineMenu extends BtnMenu {
+      constructor(editor) {
+        // data-title属性表示当鼠标悬停在该按钮上时提示该按钮的功能简述
+        const $elem = $(
+          `<div class="w-e-menu" data-title="大纲">
+               <span style='color: #999;' class="icon-dagangguanli_moren iconfont icon"></span>
+            </div>`
+        );
+        super($elem, editor);
+      }
+      clickHandler() {
+        that.showOutline = !that.showOutline
 
+      }
+      tryChangeActive() {}
+    }
+    const menuKey = 'alertMenuKey'
+    E.registerMenu(menuKey, OutlineMenu)
     this.editor.config.menus = [
       "head",
       "bold",
@@ -197,7 +229,7 @@ export default {
     this.editor.config.height = 600;
     this.editor.config.showLinkImg = false;
     this.editor.config.customUploadImg = this.diyUploadImg;
-    this.editor.config.onCatalogChange = this.CatalogChange
+    this.editor.config.onCatalogChange = this.CatalogChange;
     this.editor.create();
   },
   methods: {
@@ -213,7 +245,7 @@ export default {
     handlePublish() {
       this.visible = true;
       const html = this.editor.txt.html();
-      this.article.content = html
+      this.article.content = html;
     },
 
     onClose() {
@@ -221,47 +253,45 @@ export default {
     },
     onHandlePublish() {
       // 1. 验证表单 -- 标签、摘要
-      console.log(this.article)
+      console.log(this.article);
       // 2. 验证内容 -- 标题、内容
-      if(this.hasValue(this.article)){
+      if (this.hasValue(this.article)) {
         // 每一项都有值
         // 3. 发送ajax请求，跳转页面
-        addArticle(this.article).then(res => {
-          console.log(res)
+        addArticle(this.article).then((res) => {
+          console.log(res);
           // 弹出消息
-          if(res.code == '200'){
-            this.$message.success("发布成功！")
+          if (res.code == "200") {
+            this.$message.success("发布成功！");
           }
           // 设置store
-          this.$store.dispatch('article/changeTitle',this.article.title)
+          this.$store.dispatch("article/changeTitle", this.article.title);
           // 跳转页面
           this.$router.push({
-            path:"/published"
-          })
-          // 
-        })
+            path: "/published",
+          });
+          //
+        });
       }
-      
     },
     // 验证对象中属性是否全部有值
-    hasValue(obj){
+    hasValue(obj) {
       for (const key in obj) {
         if (Object.hasOwnProperty.call(obj, key)) {
           const value = obj[key];
-          if(key === 'abstract' && value.length < 20){
-            this.$message.warn('摘要不能少于20字')
-            return false
+          if (key === "abstract" && value.length < 20) {
+            this.$message.warn("摘要不能少于20字");
+            return false;
           }
-          if(!value){
-            return false
+          if (!value) {
+            return false;
           }
         }
       }
-      return true
+      return true;
     },
     // 自定义富文本图片上传
     diyUploadImg(resultFiles, insertImgFn) {
-      console.log(resultFiles[0]);
       const formData = new FormData();
       formData.append("file", resultFiles[0]);
       formData.append("name", this.$store.getters.info.username);
@@ -272,7 +302,7 @@ export default {
     handleTagChange(tag, check) {
       if (check) {
         this.selectedTags = [tag.id];
-        this.article.LabelId = tag.id
+        this.article.LabelId = tag.id;
       }
     },
     getLabelList() {
@@ -298,7 +328,7 @@ export default {
         fileInfo.status = "done";
         fileInfo.response = res.msg;
         fileInfo.url = res.data;
-        this.article.cover = res.data
+        this.article.cover = res.data;
       });
     },
     handlePreview(file) {
@@ -312,14 +342,18 @@ export default {
       this.fileList.splice(index, 1);
       return true;
     },
-    CatalogChange(headList){
+    CatalogChange(headList) {
       console.log(headList)
-    }
+
+      this.handList = headList
+      
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+@import url('//at.alicdn.com/t/font_2804341_7i7gmdr6rw5.css');
 .header {
   height: 50px;
   display: flex;
@@ -350,5 +384,14 @@ export default {
 }
 .check {
   border: 1px solid #f1f1f1;
+}
+
+div.outline-container{
+  position: fixed;
+  top: 20%;
+  right: 120px;
+  z-index: 1000;
+  background-color: rgb(254,254,254);
+  border-left: 1px solid rgb(201, 200, 200);
 }
 </style>

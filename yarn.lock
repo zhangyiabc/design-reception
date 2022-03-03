@@ -4743,6 +4743,11 @@ html-webpack-plugin@^3.2.0:
     toposort "^1.0.0"
     util.promisify "1.0.0"
 
+html2json@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.npmmirror.com/html2json/-/html2json-1.0.2.tgz#c9d6d202fa65402386c202b345cf51bce80ed1ef"
+  integrity sha512-tCdVt82U+/D1GCXFIoN5VfCzx767065EZJ5B8nStQUGSXU9PQ4L/0kFvF2of3Qsoe9HGaJni+lxOkqakfw0zpA==
+
 htmlparser2@^6.1.0:
   version "6.1.0"
   resolved "https://registry.npmmirror.com/htmlparser2/-/htmlparser2-6.1.0.tgz#c4d762b6c3371a05dbe65e94ae43a9f845fb8fb7"
