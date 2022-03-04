@@ -3,20 +3,26 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const port = 9527
+const port = 9526
 
 const name = 'zhang yi'
 module.exports = {
-  devServer:{
+
+  devServer: {
     port: port,
     open: true,
-    overlay: {
-      warnings: false,
-      errors: true
-    },
+    // client: {
+    //   progress: true,
+    //   overlay: {
+    //     warnings: false,
+    //     errors: true
+    //   },
+    // },
     proxy: {
       '/api': {
-        target: 'http://localhost:6789/'
+        target: 'http://172.27.1.236:6789',
+        // target: 'http://localhost:6789',
+        changeOrigin: true
       }
     }
   },
@@ -28,6 +34,7 @@ module.exports = {
       alias: {
         '@': resolve('src')
       }
-    }
+    },
+
   },
 }

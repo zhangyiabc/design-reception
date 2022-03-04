@@ -19,9 +19,9 @@ export function getCookie(item){
 }
 
 export function getItem(name) {
-  return sessionStorage.getItem(name)
+  return localStorage.getItem(name)
 }
 
 export function setItem(name, value) {
-  return sessionStorage.setItem(name, value)
+  return localStorage.setItem(name, value)
 }

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { message } from 'ant-design-vue';
 const service = axios.create({
+  // baseURL: "http://localHost:9527",
   timeout: 50000
 })
 

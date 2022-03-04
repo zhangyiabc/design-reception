@@ -17,7 +17,15 @@ const addArticle = (data) => {
   })
 }
 
+const getArticleDetail = (id) => {
+  return request({
+    url:"/api/article/" + id,
+    method:"GET"
+  })
+}
+
 export {
   getAllArticle,
-  addArticle
+  addArticle,
+  getArticleDetail
 }
