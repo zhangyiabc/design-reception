@@ -17,7 +17,7 @@
       </div>
     </div>
     <div ref="editor"></div>
-    <div class="explain">字数</div>
+    <div class="explain">字数 <span>{{len}}</span></div>
     <div>
       <a-drawer
         title="发布文章"
@@ -160,7 +160,8 @@ export default {
       },
       previewImage: "",
       previewVisible: false,
-      handList:[]
+      handList:[],
+      len:0
     };
   },
   components:{
@@ -226,10 +227,13 @@ export default {
     this.editor.highlight = hljs;
     this.editor.config.zIndex = 2;
     this.editor.config.languageTab = "    ";
-    this.editor.config.height = 600;
+    this.editor.config.height = '800';
+    this.editor.config.onchangeTimeout = 2500;
     this.editor.config.showLinkImg = false;
     this.editor.config.customUploadImg = this.diyUploadImg;
     this.editor.config.onCatalogChange = this.CatalogChange;
+    this.editor.config.onchange = this.contentChange
+    this.editor.config.onchangeTimeout = 2500;
     this.editor.create();
   },
   methods: {
@@ -247,7 +251,10 @@ export default {
       const html = this.editor.txt.html();
       this.article.content = html;
     },
-
+    // 内容发生改变
+    contentChange(){
+      this.len = this.editor.txt.text().length
+    },
     onClose() {
       this.visible = false;
     },
@@ -343,7 +350,6 @@ export default {
       return true;
     },
     CatalogChange(headList) {
-      console.log(headList)
 
       this.handList = headList
       

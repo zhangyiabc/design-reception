@@ -25,6 +25,11 @@ const routes = [
     path:"/published",
     name:"Published",
     component:() => import('../views/Published/index.vue')
+  },
+  {
+    path:"/detail/:id",
+    name:"Detail",
+    component:() => import('../views/Detail/index.vue')
   }
 ]
 

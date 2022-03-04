@@ -2,7 +2,9 @@
   <div class="blog-card">
     <div class="content" @click="handleGoDetail">
       <div class="top">
-        <span class="author">{{ blog.User.author }}</span>
+        <span class="author" @click="handleUserClick">{{
+          blog.User.author
+        }}</span>
         <span class="date">{{ blog.createdAt | formatTime }}</span>
         <span class="label" @click="handleLabelClick">{{
           blog.Label.tag
@@ -15,9 +17,9 @@
             <p>{{ blog.abstract || "无摘要" }}</p>
           </div>
           <div class="tools">
-            <span>点赞</span>
-            <span>点赞</span>
-            <span>点赞</span>
+            <span class="view">浏览量</span>
+            <span class="like" ref="like">点赞</span>
+            <span class="comment">评论</span>
           </div>
         </div>
         <div class="middle-right" v-if="blog.cover">
@@ -57,8 +59,26 @@ export default {
         },
       });
     },
-    handleGoDetail() {
-      console.log("点击了卡片");
+    handleUserClick(e) {
+      e.stopPropagation();
+      // 跳转到个人主页去
+      console.log("跳转个人主页");
+    },
+    handleGoDetail(e) {
+      if (this.$refs.like == e.target) {
+        // 说明用户点击了点赞
+        // 进行点赞操作
+        return;
+      }
+      // store中添加一项
+      this.$store.dispatch('article/addBlogList',this.blog)
+      // 跳转detail页面
+      this.$router.push({
+        name: "Detail",
+        params: {
+          id: this.blog.id,
+        },
+      });
     },
   },
 };
