@@ -76,7 +76,6 @@ export default {
           str += `<li><a herf="#${HList[i]["id"]}">${HList[i]["text"]}</a></li>`;
         }
       }
-      console.log(str);
       return str;
     },
   },
@@ -85,6 +84,7 @@ export default {
 
 <style lang="scss" scoped>
 .outline {
+  padding: 0 15px;
   // background-color: tan;
   ::v-deep ul {
     list-style: none;
@@ -96,10 +96,9 @@ export default {
     padding: 0 5px;
     font-size: 15px;
     margin: 2px 0;
-    a{
+    a {
       color: #999;
     }
   }
 }
-
 </style>

@@ -46,6 +46,7 @@ const actions = {
           commit('SET_TOKEN', token)
           commit('SET_LOGIN', true)
           commit('SET_ID', data.id)
+          delete data.password
           resolve(data)
         }
       }).catch(err => {
@@ -57,7 +58,6 @@ const actions = {
     return new Promise((resolve, reject) => {
       getUserDetail(state.id).then(resp => {
         const { data } = resp
-        console.log(data)
         commit('SET_INFO', data)
         resolve(data)
       }).catch(err => {

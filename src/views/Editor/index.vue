@@ -249,6 +249,7 @@ export default {
     handlePublish() {
       this.visible = true;
       const html = this.editor.txt.html();
+      console.log(html)
       this.article.content = html;
     },
     // 内容发生改变

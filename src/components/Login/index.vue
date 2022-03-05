@@ -55,10 +55,15 @@ export default {
           username: this.username,
           password: this.password,
         })
-        .then(() => {
+        .then((res) => {
           // 此时登录成功
           store.dispatch("setting/setShow", false);
-          store.dispatch('user/getUserInfo')
+          store.dispatch("user/getUserInfo");
+          // console.log(res);
+          console.log(this.$socket)
+          this.$socket.emit("login", {
+            username: res.username,
+          });
         });
     },
     handleFocus() {

@@ -11,19 +11,31 @@ module.exports = {
   devServer: {
     port: port,
     open: true,
-    // client: {
-    //   progress: true,
-    //   overlay: {
-    //     warnings: false,
-    //     errors: true
-    //   },
-    // },
+    clientLogLevel: 'none',
+    // socket: 'socket',
+    // webSocketServer: 'ws',
+    overlay: {
+      warnings: false,
+      errors: true
+    },
     proxy: {
-      '/api': {
-        target: 'http://172.27.1.236:6789',
-        // target: 'http://localhost:6789',
+      '/socket.io': {
+        target: 'http://192.168.63.218:8021',
+        ws: true,
         changeOrigin: true
-      }
+      },
+      '/sockjs-node': {
+        target: 'http://192.168.63.218:8021',
+        ws: false,
+        changeOrigin: true
+      },
+      '/api': {
+        target: 'http://192.168.63.218:6789',
+        // target: 'http://localhost:6789',
+        changeOrigin: true,
+      },
+
+
     }
   },
   configureWebpack: {

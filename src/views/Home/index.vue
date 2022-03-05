@@ -29,14 +29,15 @@
           <div class="blog">
             <div class="left-blog">
               <div class="blog-container" v-if="!isLoading">
-                <template v-for="blog in blogList">
+                <a-empty imageStyle="height:200px" v-if="blogList.length == 0" :image="simpleImage"  description='试试别的选项，暂无数据哦~' />
+                <template v-else v-for="blog in blogList">
                   <BlogCard :blog="blog" :key="blog.id" />
                 </template>
               </div>
               <div v-if="isLoading">
                 <a-spin class="spin" size="large" tip="玩命加载中..." />
               </div>
-              <div class="pager">
+              <div class="pager" v-if="blogList.length > 0">
                 <a-pagination
                   show-quick-jumper
                   :default-current="pager.page"
@@ -60,6 +61,7 @@ import { sentence } from "@/apis/sentence";
 import BlogCard from "@/components/blogCard/index.vue";
 import { getAllArticle } from "@/apis/article";
 import store from "@/store";
+const imgSrc = require("@/assets/empty.png");
 export default {
   components: {
     Layout,
@@ -70,6 +72,7 @@ export default {
       isLoading: false,
       tags: [],
       top: 0,
+      simpleImage: imgSrc,
       infoData: [],
       blogList: [],
       selectedTags: [],
@@ -217,6 +220,7 @@ export default {
       width: 70%;
       .blog-container {
         margin-bottom: 20px;
+        
       }
       .spin {
         position: absolute;
