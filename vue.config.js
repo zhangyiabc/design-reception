@@ -20,18 +20,20 @@ module.exports = {
     },
     proxy: {
       '/socket.io': {
-        target: 'http://192.168.63.218:8021',
+        // target: 'http://192.168.63.218:8021',
+        target: 'http://localhost:8021',
         ws: true,
         changeOrigin: true
       },
       '/sockjs-node': {
-        target: 'http://192.168.63.218:8021',
+        // target: 'http://192.168.63.218:8021',
+        target: 'http://localhost:8021',
         ws: false,
         changeOrigin: true
       },
       '/api': {
-        target: 'http://192.168.63.218:6789',
-        // target: 'http://localhost:6789',
+        // target: 'http://192.168.63.218:6789',
+        target: 'http://localhost:6789',
         changeOrigin: true,
       },
 

@@ -12,7 +12,11 @@ export default {
     return {
        locale: zhCN,
     }
+  },
+  destroyed(){
+    console.log('主组件将要被销毁')
   }
+  
 }
 </script>
 <style lang="scss">

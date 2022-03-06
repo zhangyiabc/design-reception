@@ -68,15 +68,26 @@
       <div class="login-btn">
         <a-button v-if="!userInfo.id" @click="handleLogin">登录</a-button>
         <a-dropdown v-if="userInfo.id">
-          <a-avatar :size="58" icon="user" :src='userInfo.UserInfo.avatar' />
+          <a-avatar :size="58" icon="user" :src="userInfo.UserInfo.avatar" />
           <a-menu class="menus" slot="overlay" @click="handleMenuClick">
-            <a-menu-item key="1"><a-icon class=".menu-ico" type="edit" /> <span  @click="handleClick">写文章</span>  </a-menu-item>
+            <a-menu-item key="1"
+              ><a-icon class=".menu-ico" type="edit" />
+              <span @click="handleClick">写文章</span>
+            </a-menu-item>
             <a-menu-divider />
-            <a-menu-item key="2"><a-icon class=".menu-ico" type="home" /> 我的主页 </a-menu-item>
-            <a-menu-item key="3"><a-icon class=".menu-ico" type="github" /> GitHub </a-menu-item>
-            <a-menu-item key="4"><a-icon class=".menu-ico" type="wechat" /> 联系我 </a-menu-item> 
+            <a-menu-item key="2"
+              ><a-icon class=".menu-ico" type="home" /> 我的主页
+            </a-menu-item>
+            <a-menu-item key="3"
+              ><a-icon class=".menu-ico" type="github" /> GitHub
+            </a-menu-item>
+            <a-menu-item key="4"
+              ><a-icon class=".menu-ico" type="wechat" /> 联系我
+            </a-menu-item>
             <a-menu-divider />
-            <a-menu-item key="5"> <a-icon class=".menu-ico" type="poweroff" /> 退出 </a-menu-item>
+            <a-menu-item key="5">
+              <a-icon class=".menu-ico" type="poweroff" /> 退出
+            </a-menu-item>
           </a-menu>
         </a-dropdown>
       </div>
@@ -107,8 +118,8 @@ export default {
       userInfo: "info",
     }),
   },
-  mounted(){
-    console.log(this.userInfo)
+  mounted() {
+    console.log(this.userInfo);
   },
   data() {
     return {
@@ -146,7 +157,14 @@ export default {
       this.$store.dispatch("setting/setShow", true);
     },
     handleMenuClick(value) {
-      console.log(value);
+      // console.log(value);
+      const { key } = value;
+      if (key === "5") {
+        this.$socket.emit("loginOut", {
+          userId: this.userInfo.id,
+        });
+        // console.log(this.userInfo)
+      }
     },
     handleCancel(e) {
       if (e.target.className != "mantle-container") {
@@ -218,9 +236,9 @@ export default {
   height: 60px;
   margin-right: 10px;
 }
-.menus{
+.menus {
   font-size: 14.4px;
-  .menus .menu-ico{
+  .menus .menu-ico {
     font-size: 14.4px;
   }
 }
