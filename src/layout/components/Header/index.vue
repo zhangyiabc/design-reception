@@ -75,14 +75,14 @@
               <span @click="handleClick">写文章</span>
             </a-menu-item>
             <a-menu-divider />
-            <a-menu-item key="2"
-              ><a-icon class=".menu-ico" type="home" /> 我的主页
+            <a-menu-item key="2">
+              <a-icon class=".menu-ico" type="home" /> 我的主页
             </a-menu-item>
-            <a-menu-item key="3"
-              ><a-icon class=".menu-ico" type="github" /> GitHub
+            <a-menu-item key="3">
+              <a-icon class=".menu-ico" type="github" /> GitHub
             </a-menu-item>
-            <a-menu-item key="4"
-              ><a-icon class=".menu-ico" type="wechat" /> 联系我
+            <a-menu-item key="4">
+              <a-icon class=".menu-ico" type="wechat" /> 联系我
             </a-menu-item>
             <a-menu-divider />
             <a-menu-item key="5">
@@ -157,13 +157,14 @@ export default {
       this.$store.dispatch("setting/setShow", true);
     },
     handleMenuClick(value) {
-      // console.log(value);
       const { key } = value;
       if (key === "5") {
+        // 传递用户退出系统
         this.$socket.emit("loginOut", {
           userId: this.userInfo.id,
         });
-        // console.log(this.userInfo)
+        // 清除token、vuex中的该用户的信息
+        // 设置登录状态为未登录
       }
     },
     handleCancel(e) {

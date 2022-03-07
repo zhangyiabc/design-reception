@@ -1,23 +1,19 @@
 <template>
   <div id="app">
     <a-config-provider :locale="locale">
-    <router-view />
+      <router-view />
     </a-config-provider>
   </div>
 </template>
 <script>
-import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
+import zhCN from "ant-design-vue/lib/locale-provider/zh_CN";
 export default {
-  data(){
+  data() {
     return {
-       locale: zhCN,
-    }
-  },
-  destroyed(){
-    console.log('主组件将要被销毁')
+      locale: zhCN,
+    };
   }
-  
-}
+};
 </script>
 <style lang="scss">
 html,

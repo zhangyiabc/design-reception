@@ -19,9 +19,13 @@ service.interceptors.response.use(
     const res = response.data
     return res
   },
-  err => {
-    message.error(err.msg)
-    return Promise.reject(err)
+  ({response}) => {
+    console.log(response.config.url)
+    if(response.config.url !== '/api/user/whoami'){
+      message.error(response.data.msg)
+    } 
+    // message.error(response.data.msg)
+    return Promise.reject(response.data)
   }
 )
 
