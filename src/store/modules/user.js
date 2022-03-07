@@ -1,6 +1,6 @@
 // 关于用户登录相关
 import { message } from 'ant-design-vue';
-import { login, getUserDetail } from '@/apis/user'
+import { login, getUserDetail, whoami as whoamiApi } from '@/apis/user'
 import { getToken, getCookie, } from '@/utils/auth'
 const getDefaultState = () => {
   return {
@@ -61,6 +61,24 @@ const actions = {
         commit('SET_INFO', data)
         resolve(data)
       }).catch(err => {
+        reject(err)
+      })
+    })
+  },
+  whoami({ commit }) {
+    return new Promise((resolve, reject) => {
+      whoamiApi().then(resp => {
+        // console.log(resp)
+        const { data } = resp
+        commit('SET_INFO', data)
+        commit('SET_LOGIN', true)
+        commit('SET_ID', data.id)
+        // this.$socket.emit('login', {
+        //   userId: data.id
+        // })
+        resolve(data)
+
+      }).catch((err) => {
         reject(err)
       })
     })

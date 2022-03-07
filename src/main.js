@@ -9,8 +9,8 @@ const socketOptions = {
 }
 Vue.use(
   new VueSocketIO({
-    debug: true ,   // debug调试，生产建议关闭
-    connection: SocketIO("http://localhost:8021", socketOptions),
+    // debug: true,   // debug调试，生产建议关闭
+    connection: SocketIO("http://192.168.55.204:8021", socketOptions),
     // allowEIO3:true,
     // extraHeaders: {
     //   'Access-Control-Allow-Credentials':true
@@ -19,11 +19,10 @@ Vue.use(
   })
 )
 
-// console.log(socket.connected); // socket是否与服务器连接
-// console.log(socket.disconnected); // socket是否与服务器断开连接
+
 // import { DatePicker } from "ant-design-vue";
 import Antd from 'ant-design-vue'
-import "ant-design-vue/dist/antd.css"; 
+import "ant-design-vue/dist/antd.css";
 
 Vue.config.productionTip = false
 Vue.use(Antd)
@@ -33,5 +32,11 @@ const app = new Vue({
   store,
   render: h => h(App)
 })
-console.log(app.$socket.connect())
+
+app.$socket.connect()
 app.$mount('#app')
+store.dispatch('user/whoami').then(res => {
+  app.$socket.emit('login', {
+    userId: res.id
+  })
+})

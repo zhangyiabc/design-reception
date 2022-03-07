@@ -22,3 +22,10 @@ export function getUserDetail(id) {
     method: "GET"
   })
 }
+
+export function whoami() {
+  return request({
+    url: '/api/user/whoami',
+    method: "GET"
+  })
+}
