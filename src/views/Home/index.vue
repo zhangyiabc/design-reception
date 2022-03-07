@@ -29,7 +29,7 @@
           <div class="blog">
             <div class="left-blog">
               <div class="blog-container" v-if="!isLoading">
-                <a-empty imageStyle="height:200px" v-if="blogList.length == 0" :image="simpleImage"  description='试试别的选项，暂无数据哦~' />
+                <a-empty :imageStyle="{height:'200px'}" v-if="blogList.length == 0" :image="simpleImage"  description='试试别的选项，暂无数据哦~' />
                 <template v-else v-for="blog in blogList">
                   <BlogCard :blog="blog" :key="blog.id" />
                 </template>

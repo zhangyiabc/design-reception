@@ -62,7 +62,15 @@ export default {
     handleUserClick(e) {
       e.stopPropagation();
       // 跳转到个人主页去
-      console.log("跳转个人主页");
+      console.log("跳转个人主页",this.blog.UserId);
+      this.$router.push({
+        path: "/user",
+        name:"UserInfo",
+        params: {
+          id: this.blog.UserId,
+        },
+      });
+      // console.log(this.blog)
     },
     handleGoDetail(e) {
       if (this.$refs.like == e.target) {
@@ -71,7 +79,7 @@ export default {
         return;
       }
       // store中添加一项
-      this.$store.dispatch('article/addBlogList',this.blog)
+      this.$store.dispatch("article/addBlogList", this.blog);
       // 跳转detail页面
       this.$router.push({
         name: "Detail",

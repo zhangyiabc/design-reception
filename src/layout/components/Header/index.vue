@@ -165,6 +165,14 @@ export default {
         });
         // 清除token、vuex中的该用户的信息
         // 设置登录状态为未登录
+      } else if (key === "3") {
+        window.open("https://github.com/zhangyiabc/design-reception");
+      } else if (key === "2") {
+        this.$router.push({
+          name: "Personal",
+        });
+      }else if(key === '4'){
+        console.log('弹出我的微信二维码')
       }
     },
     handleCancel(e) {
