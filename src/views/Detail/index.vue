@@ -1,41 +1,68 @@
 <template>
-  <div class="detail-container"></div>
+  <Layout>
+    <template>
+      <div class="detail-container">
+        <div class="contentFixed">
+          position：fixed；固定定位
+          点赞量
+          评论量
+          转发(复制url + title + 自定义到剪贴板)
+          举报
+        </div>
+        <div class="contentLeft">
+          <div class="contentDetail">
+            文章内容
+          </div>
+          <div class="footer">
+            文章的评论列表
+          </div>
+        </div>
+        <div class="contentRight">
+          目录
+        </div>
+      </div>
+    </template>
+  </Layout>
 </template>
 
 <script>
-import {getItem} from '@/utils/auth'
-import {getArticleDetail} from '@/apis/article'
+import Layout from "@/layout";
+import { getItem } from "@/utils/auth";
+import { getArticleDetail } from "@/apis/article";
 export default {
-  computed:{
-    blogList(){
-      return this.$store.getters.blogList
-    }
+  components: {
+    Layout,
+  },
+  computed: {
+    blogList() {
+      return this.$store.getters.blogList;
+    },
   },
   created() {
     this.articleId = this.$route.params.id;
-    if(this.blogList.length > 0){
-      this.blog = this.getNowArticle(this.blogList,this.articleId)
-    }else{
+    if (this.blogList.length > 0) {
+      this.blog = this.getNowArticle(this.blogList, this.articleId);
+    } else {
       // 尝试从localStorage中读取数据，如果有拿出来，没有的话掉接口
-      const tempList = JSON.parse(getItem('bloglist'))
-      console.log(tempList)
-      if(tempList && tempList.length > 0){
-        const res = this.getNowArticle(tempList,this.articleId)
+      const tempList = JSON.parse(getItem("bloglist"));
+      console.log(tempList);
+      if (tempList && tempList.length > 0) {
+        const res = this.getNowArticle(tempList, this.articleId);
         // 判断能不能从localStorage拿到数据，拿不到就掉接口
-        if(!res){
-          this.getArticle(this.articleId)
-        }else{
-          this.blog = res
+        if (!res) {
+          this.getArticle(this.articleId);
+        } else {
+          this.blog = res;
         }
-      }else{
-        this.getArticle(this.articleId)
+      } else {
+        this.getArticle(this.articleId);
       }
     }
   },
   data() {
     return {
       articleId: "",
-      blog:''
+      blog: "",
     };
   },
   methods: {
@@ -47,13 +74,13 @@ export default {
       }
       return null;
     },
-    getArticle(id){
+    getArticle(id) {
       // 掉接口获取文章详情
-      getArticleDetail(id).then(res => {
-        this.blog = res.data
-        console.log(this.blog)
-      })
-    }
+      getArticleDetail(id).then((res) => {
+        this.blog = res.data;
+        console.log(this.blog);
+      });
+    },
   },
 };
 </script>

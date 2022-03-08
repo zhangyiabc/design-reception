@@ -46,7 +46,15 @@
                 />
               </div>
             </div>
-            <div class="right-blog"></div>
+            <div class="right-blog">
+              <div class="welcome">欢迎您</div>
+              <div class="order">
+                作者排行榜
+              </div>
+              <div class="record">
+                备案信息
+              </div>
+            </div>
           </div>
         </div>
       </template>
@@ -215,7 +223,8 @@ export default {
   .blog {
     width: 80%;
     margin: 0 auto;
-
+    display: flex;
+    justify-content: space-between;
     .left-blog {
       width: 70%;
       .blog-container {
@@ -227,6 +236,9 @@ export default {
         top: 50%;
         left: 50%;
       }
+    }
+    .right-blog{
+      width: 26%;
     }
     .pager {
       text-align: center;
