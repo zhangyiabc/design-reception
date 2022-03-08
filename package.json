@@ -12,6 +12,7 @@
     "@vue/babel-preset-jsx": "^1.2.4",
     "ant-design-vue": "1.7.8",
     "axios": "^0.25.0",
+    "clipboard-copy": "^4.0.1",
     "core-js": "^3.6.5",
     "highlight.js": "^11.4.0",
     "html2json": "^1.0.2",

@@ -23,11 +23,14 @@ export default {
 <style lang="scss" scoped>
   .layout{
     height: 100%;
+    background-color: rgb(244, 245, 245);
   }
   .header{
     height: 60px;
+    background-color: #fff;
   }
   .middle{
     height: calc(100% - 60px);
+    background-color: rgb(244, 245, 245);
   }
 </style>

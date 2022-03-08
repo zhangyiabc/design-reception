@@ -7,8 +7,9 @@ const port = 9526
 
 const name = 'zhang yi'
 module.exports = {
-
+  runtimeCompiler: true,
   devServer: {
+    
     port: port,
     open: true,
     clientLogLevel: 'none',
