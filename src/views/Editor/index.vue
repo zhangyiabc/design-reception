@@ -16,8 +16,10 @@
         </div>
       </div>
     </div>
-    <div ref="editor"></div>
-    <div class="explain">字数 <span>{{len}}</span></div>
+    <div ref="editor">
+      <!-- <Outline class="outline-container" v-if="showOutline" :list="handList" /> -->
+    </div>
+    <div class="explain">字数: <span>{{len}}</span></div>
     <div>
       <a-drawer
         title="发布文章"
@@ -138,7 +140,7 @@ import { addArticle } from "@/apis/article";
 import E from "wangeditor";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
-import Outline from '../Outline/index.vue'
+import Outline from '../Outline/indexJSX.jsx'
 export default {
   data() {
     return {
@@ -227,7 +229,7 @@ export default {
     this.editor.highlight = hljs;
     this.editor.config.zIndex = 2;
     this.editor.config.languageTab = "    ";
-    this.editor.config.height = '800';
+    this.editor.config.height = '8000';
     this.editor.config.onchangeTimeout = 2500;
     this.editor.config.showLinkImg = false;
     this.editor.config.customUploadImg = this.diyUploadImg;
@@ -397,8 +399,17 @@ div.outline-container{
   position: fixed;
   top: 20%;
   right: 120px;
+  // height: 400px;
   z-index: 1000;
   background-color: rgb(254,254,254);
-  border-left: 1px solid rgb(201, 200, 200);
+  // border-left: 1px solid rgb(201, 200, 200);
+  ::v-deep .ant-anchor-wrapper{
+    overflow: hidden;
+  }
+}
+div.explain{
+  position: fixed;
+  bottom: 5px;
+  z-index: 5;
 }
 </style>
