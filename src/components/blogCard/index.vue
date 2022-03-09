@@ -20,7 +20,11 @@
             <span class="view"
               ><i class="iconfont icon-liulan" />{{ blog.viewcount }}</span
             >
-            <span class="like" ref="like"
+            <span
+              class="like"
+              ref="like"
+              :style="{ color: isLike ? '#1d7dfa' : '#4e5969' }"
+              @click="handleLike"
               ><i class="iconfont icon-dianzan"></i>{{ blog.likecount }}</span
             >
             <span class="comment"
@@ -37,12 +41,21 @@
 </template>
 
 <script>
+/**
+ * 判断这篇文章用户有没有点赞
+ */
+import { like as likeApi, cancelLike } from "@/apis/like";
 import moment from "moment";
 export default {
   filters: {
     formatTime(time) {
       return moment(time).format("yyyy-MM-DD h:mm:ss");
     },
+  },
+  data() {
+    return {
+      isLike: false,
+    };
   },
   props: {
     blog: {
@@ -51,7 +64,8 @@ export default {
     },
   },
   created() {
-    console.log(this.blog);
+    const result = this.isHas(this.$store.getters.likeList, this.blog.id);
+    this.isLike = result;
   },
   methods: {
     handleLabelClick(e) {
@@ -79,15 +93,55 @@ export default {
           id: this.blog.UserId,
         },
       });
-      // console.log(this.blog)
     },
-    handleGoDetail(e) {
-      if (this.$refs.like == e.target) {
-        // 说明用户点击了点赞
-        // 进行点赞操作
-        // 调接口
-        return;
+    isHas(arr, id) {
+      if (arr.length === 0) {
+        return false;
       }
+      for (const item of arr) {
+        if (item.ArticleId == id) {
+          return true;
+        }
+      }
+      return false;
+    },
+    handleLike(e) {
+      e.stopPropagation();
+      // console.log("点击了喜欢");
+      // 调接口，改样式
+      // vuex中添加一项
+      if (this.isLike) {
+        // 此时已经点赞过这个文章，取消点赞
+        // vuex移除这一项
+        cancelLike({
+          articleId: this.blog.id,
+        }).then((res) => {
+          if (res.code === "200") {
+            this.blog.likecount--;
+            this.$store.dispatch("like/deleteLike", res.data.id);
+          }
+        });
+      } else {
+        // 没点赞，进行点赞
+        // vuex添加一项
+        likeApi({
+          articleId: this.blog.id,
+        }).then((res) => {
+          if (res.code === "200") {
+            this.blog.likecount++;
+            this.$store.dispatch("like/addLikeList", {
+              id: res.data.id,
+              title: this.blog.title,
+              cover: this.blog.cover,
+              UserId: res.UserId,
+              ArticleId: this.blog.id,
+            });
+          }
+        });
+      }
+      this.isLike = !this.isLike;
+    },
+    handleGoDetail() {
       // store中添加一项
       this.$store.dispatch("article/addBlogList", this.blog);
       // 跳转detail页面
@@ -205,7 +259,7 @@ export default {
           span {
             cursor: pointer;
             margin-right: 18px;
-            color: #4e5969;
+            // color: #4e5969;
 
             i {
               font-size: 22px;

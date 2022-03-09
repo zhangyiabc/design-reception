@@ -59,6 +59,10 @@ export default {
           // 此时登录成功
           store.dispatch("setting/setShow", false);
           store.dispatch("user/getUserInfo");
+          store.dispatch("like/getLikeList", {
+            type: "user",
+            id: res.id,
+          });
           // console.log(res);
           // console.log(this.$socket)
           this.$socket.emit("login", {

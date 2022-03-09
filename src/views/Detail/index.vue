@@ -37,15 +37,14 @@
               <i class="iconfont icon-fenxiang" />
             </div> -->
             <a-divider />
-             <a-tooltip placement="top">
+            <a-tooltip placement="top">
               <template slot="title">
                 <span>举报此文章</span>
               </template>
               <div class="report">
-              <i class="iconfont icon-jubao"></i>
-            </div>
+                <i class="iconfont icon-jubao"></i>
+              </div>
             </a-tooltip>
-            
           </div>
           <div class="contentLeft">
             <div class="contentDetail">
@@ -125,6 +124,10 @@
 </template>
 
 <script>
+/**
+ * 同样需要判断是否点赞过
+ */
+import { like as likeApi, cancelLike } from "@/apis/like";
 import Layout from "@/layout";
 import Outline from "../Outline/indexJSX.jsx";
 import { getItem } from "@/utils/auth";
@@ -173,7 +176,8 @@ export default {
         this.getArticle(this.articleId);
       }
     }
-    console.log(this.blog);
+    const result = this.isHas(this.$store.getters.likeList, this.blog.id);
+    this.likeed = result;
   },
   mounted() {
     // console.log('mounted start')
@@ -218,7 +222,7 @@ export default {
       // console.log(arr)
       if (arr.length === 1 && arr[0]["child"]) {
         arr = arr[0]["child"];
-      } else if(arr.length === 1 && !arr[0]['child']) {
+      } else if (arr.length === 1 && !arr[0]["child"]) {
         return [];
       }
       const reg = /^h[1-6]$/;
@@ -262,8 +266,50 @@ export default {
       });
     },
     handleLikeClick() {
+      // 调接口，改样式
+      // vuex中添加一项
+      if (this.likeed) {
+        // 此时已经点赞过这个文章，取消点赞
+        // vuex移除这一项
+        cancelLike({
+          articleId: this.blog.id,
+        }).then((res) => {
+          if (res.code === "200") {
+            this.blog.likecount--;
+            this.$store.dispatch("like/deleteLike", res.data.id);
+          }
+        });
+      } else {
+        // 没点赞，进行点赞
+        // vuex添加一项
+        likeApi({
+          articleId: this.blog.id,
+        }).then((res) => {
+          if (res.code === "200") {
+            this.blog.likecount++;
+            this.$store.dispatch("like/addLikeList", {
+              id: res.data.id,
+              title: this.blog.title,
+              cover: this.blog.cover,
+              UserId: res.UserId,
+              ArticleId: this.blog.id,
+            });
+          }
+        });
+      }
       this.likeed = !this.likeed;
       // console.log(this.likeed)
+    },
+    isHas(arr, id) {
+      if (arr.length === 0) {
+        return false;
+      }
+      for (const item of arr) {
+        if (item.ArticleId == id) {
+          return true;
+        }
+      }
+      return false;
     },
   },
 };

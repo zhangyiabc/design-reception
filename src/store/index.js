@@ -6,6 +6,7 @@ import user from './modules/user'
 import setting from './modules/setting'
 import article from './modules/article'
 import label from './modules/label'
+import like from './modules/like'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -17,7 +18,8 @@ export default new Vuex.Store({
     user,
     setting,
     label,
-    article
+    article,
+    like
   },
   getters
 })

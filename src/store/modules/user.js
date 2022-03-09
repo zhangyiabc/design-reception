@@ -2,6 +2,7 @@
 import { message } from 'ant-design-vue';
 import { login, getUserDetail, whoami as whoamiApi } from '@/apis/user'
 import { getToken, getCookie, } from '@/utils/auth'
+
 const getDefaultState = () => {
   return {
     info: {},
@@ -73,9 +74,8 @@ const actions = {
         commit('SET_INFO', data)
         commit('SET_LOGIN', true)
         commit('SET_ID', data.id)
-        // this.$socket.emit('login', {
-        //   userId: data.id
-        // })
+        // 拿到用户id调一次点赞接口，查看这个用户点赞过哪些文章
+        // store.dispatch('like/getLikeList', { type: 'user', id: res.id })
         resolve(data)
 
       }).catch((err) => {
