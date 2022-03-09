@@ -73,7 +73,13 @@
               <div class="content" v-html="blog.content"></div>
             </div>
             <div class="middle"></div>
-            <div class="footer" id="comment">文章的评论列表</div>
+            <div class="footer" id="comment">
+              <h2 class="commitTitle">评论</h2>
+              <WrtiteComment
+                :loading="publishLoading"
+                @handlePublishComment="handlePublishComment"
+              />
+            </div>
           </div>
           <div class="contentRight">
             <div class="right-user">
@@ -127,11 +133,13 @@
 /**
  * 同样需要判断是否点赞过
  */
+import { getArticleDetail } from "@/apis/article";
 import { like as likeApi, cancelLike } from "@/apis/like";
+import { publishComment } from "@/apis/comment";
 import Layout from "@/layout";
 import Outline from "../Outline/indexJSX.jsx";
+import WrtiteComment from "./components/WriteComment.vue";
 import { getItem } from "@/utils/auth";
-import { getArticleDetail } from "@/apis/article";
 import moment from "moment";
 import copy from "clipboard-copy";
 const html2json = require("html2json").html2json;
@@ -144,6 +152,7 @@ export default {
   components: {
     Layout,
     Outline,
+    WrtiteComment,
   },
 
   computed: {
@@ -190,6 +199,7 @@ export default {
       likeed: false,
       blog: {},
       handList: [],
+      publishLoading: false,
       likeNoActive: {
         backgroundColor: "#c2c8d1",
         color: "#fff",
@@ -298,7 +308,6 @@ export default {
         });
       }
       this.likeed = !this.likeed;
-      // console.log(this.likeed)
     },
     isHas(arr, id) {
       if (arr.length === 0) {
@@ -310,6 +319,25 @@ export default {
         }
       }
       return false;
+    },
+    handlePublishComment(value) {
+      // 调接口
+      this.publishLoading = true;
+      publishComment({
+        objectId:this.blog.id,
+        content:value,
+        type:'art'
+      })
+        .then((res) => {
+          if (res.code === "200") {
+            this.$message.success("发布成功");
+            // 重新调获取列表接口
+            
+          }
+        })
+        .finally(() => {
+          this.publishLoading = false;
+        });
     },
   },
 };
@@ -375,7 +403,7 @@ export default {
       width: 72%;
       // background-color: rgb(244, 245, 245);
 
-      padding: 30px 0;
+      padding: 30px 0 0 0;
       border-radius: 5px;
       box-sizing: border-box;
       .contentDetail {
@@ -422,6 +450,14 @@ export default {
       }
       .footer {
         background-color: #fff;
+        margin-bottom: 20px;
+        padding: 30px;
+        .commitTitle {
+          font-size: 18px;
+          line-height: 30px;
+          font-weight: 600;
+          color: #252933;
+        }
       }
     }
     .contentRight {
