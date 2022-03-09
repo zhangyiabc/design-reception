@@ -119,7 +119,7 @@ export default {
     }),
   },
   mounted() {
-    console.log(this.userInfo);
+    // console.log(this.userInfo);
   },
   data() {
     return {
@@ -137,7 +137,7 @@ export default {
       if (!value) {
         return;
       }
-      console.log(value);
+      // console.log(value);
       store.dispatch("search/changeKey", value);
       // 跳转到search页面
       this.$router.push({

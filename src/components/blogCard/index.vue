@@ -14,12 +14,18 @@
         <div class="middle-left">
           <div class="title">{{ blog.title }}</div>
           <div class="abstract">
-            <p>{{ blog.abstract || "无摘要" }}</p>
+            <p>{{ blog.abstract || "-无摘要" }}</p>
           </div>
           <div class="tools">
-            <span class="view">浏览量</span>
-            <span class="like" ref="like">点赞</span>
-            <span class="comment">评论</span>
+            <span class="view"
+              ><i class="iconfont icon-liulan" />{{ blog.viewcount }}</span
+            >
+            <span class="like" ref="like"
+              ><i class="iconfont icon-dianzan"></i>{{ blog.likecount }}</span
+            >
+            <span class="comment"
+              ><i class="iconfont icon-pinglun1" />{{ blog.commentcount }}</span
+            >
           </div>
         </div>
         <div class="middle-right" v-if="blog.cover">
@@ -44,6 +50,9 @@ export default {
       default: () => {},
     },
   },
+  created() {
+    console.log(this.blog);
+  },
   methods: {
     handleLabelClick(e) {
       e.stopPropagation();
@@ -62,10 +71,10 @@ export default {
     handleUserClick(e) {
       e.stopPropagation();
       // 跳转到个人主页去
-      console.log("跳转个人主页",this.blog.UserId);
+      // console.log("跳转个人主页",this.blog.UserId);
       this.$router.push({
         path: "/user",
-        name:"UserInfo",
+        name: "UserInfo",
         params: {
           id: this.blog.UserId,
         },
@@ -76,6 +85,7 @@ export default {
       if (this.$refs.like == e.target) {
         // 说明用户点击了点赞
         // 进行点赞操作
+        // 调接口
         return;
       }
       // store中添加一项
@@ -93,6 +103,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import url("//at.alicdn.com/t/font_2804341_lg176gsqn7.css");
 .blog-card {
   padding: 10px;
   padding-bottom: 0;
@@ -186,6 +197,27 @@ export default {
         p {
           padding: 0;
           margin: 0;
+        }
+        .tools {
+          font-size: 18px;
+          display: flex;
+          align-items: center;
+          span {
+            cursor: pointer;
+            margin-right: 18px;
+            color: #4e5969;
+
+            i {
+              font-size: 22px;
+              margin-right: 8px;
+            }
+          }
+          span.like,
+          span.comment {
+            &:hover {
+              color: #1d7dfa;
+            }
+          }
         }
       }
       .middle-right {

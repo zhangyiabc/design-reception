@@ -4,12 +4,52 @@
       <div class="detail">
         <div class="detail-container">
           <div class="contentFixed">
-            position：fixed；固定定位 点赞量 评论量 转发(复制url + title +
-            自定义到剪贴板) 举报
+            <div class="like" @click="handleLikeClick">
+              <span
+                ><a-badge
+                  :count="blog.likecount"
+                  :number-style="likeed ? likeActive : likeNoActive"
+              /></span>
+              <i
+                class="iconfont icon-dianzan"
+                :style="{ color: likeed ? '#1e80ff' : '#c2c8d1' }"
+              ></i>
+              <!-- <a-icon type="like" :style="{ color: likeed ? '#1e80ff' : '#c2c8d1' }" /> -->
+            </div>
+            <a href="#comment">
+              <div class="comment">
+                <span>
+                  <a-badge
+                    :count="blog.commentcount"
+                    :number-style="likeNoActive"
+                /></span>
+                <i class="iconfont icon-pinglun1" /></div
+            ></a>
+            <a-tooltip placement="top">
+              <template slot="title">
+                <span>分享</span>
+              </template>
+              <div class="share" @click="handleShareClick">
+                <i class="iconfont icon-fenxiang" />
+              </div>
+            </a-tooltip>
+            <!-- <div class="share" @click="handleShareClick">
+              <i class="iconfont icon-fenxiang" />
+            </div> -->
+            <a-divider />
+             <a-tooltip placement="top">
+              <template slot="title">
+                <span>举报此文章</span>
+              </template>
+              <div class="report">
+              <i class="iconfont icon-jubao"></i>
+            </div>
+            </a-tooltip>
+            
           </div>
           <div class="contentLeft">
             <div class="contentDetail">
-              <h1 class="title">{{blog.title}}</h1>
+              <h1 class="title">{{ blog.title }}</h1>
               <div class="user-info">
                 <div class="left-info">
                   <div class="avatar">
@@ -34,7 +74,7 @@
               <div class="content" v-html="blog.content"></div>
             </div>
             <div class="middle"></div>
-            <div class="footer">文章的评论列表</div>
+            <div class="footer" id="comment">文章的评论列表</div>
           </div>
           <div class="contentRight">
             <div class="right-user">
@@ -49,18 +89,27 @@
               </div>
               <div class="right-other-info">
                 <div class="like">
-                  <i class="el-icon-magic-stick" />
+                  <!-- <a-icon type="like" /> -->
+                  <i class="icon-dianzan iconfont"></i>
                   文章被点赞<span>{{ blog.likecount }}</span
                   >次
                 </div>
                 <div class="view">
-                  <i class="el-icon-view" /> 文章被浏览<span>0</span>次
+                  <i class="icon-liulan iconfont" /> 文章被浏览<span>{{
+                    blog.viewcount
+                  }}</span
+                  >次
                 </div>
                 <div class="rank">
-                  <i class="el-icon-trophy" /> 该作者共发布<span>{{
+                  <i class="icon-chengjiu iconfont" /> 该作者共发布<span>{{
                     blog.User.count
                   }}</span
                   >篇文章
+                </div>
+                <div class="achievement" v-if="blog.User.count > 10">
+                  <i class="icon-shangsheng iconfont"></i>
+                  优秀创作者
+                  <span></span>
                 </div>
               </div>
             </div>
@@ -81,6 +130,7 @@ import Outline from "../Outline/indexJSX.jsx";
 import { getItem } from "@/utils/auth";
 import { getArticleDetail } from "@/apis/article";
 import moment from "moment";
+import copy from "clipboard-copy";
 const html2json = require("html2json").html2json;
 export default {
   filters: {
@@ -123,15 +173,29 @@ export default {
         this.getArticle(this.articleId);
       }
     }
+    console.log(this.blog);
   },
   mounted() {
+    // console.log('mounted start')
     this.handList = this.getElement(html2json(this.blog.content).child);
+    // console.log('mounted end')
   },
   data() {
     return {
       articleId: "",
-      blog: "",
+      likeed: false,
+      blog: {},
       handList: [],
+      likeNoActive: {
+        backgroundColor: "#c2c8d1",
+        color: "#fff",
+        // boxShadow: "0 0 0 1px #d9d9d9 inset",
+      },
+      likeActive: {
+        backgroundColor: "#1e80ff",
+        color: "#fff",
+        // boxShadow: "0 0 0 1px #d9d9d9 inset",
+      },
     };
   },
   methods: {
@@ -151,8 +215,11 @@ export default {
       });
     },
     getElement(arr) {
-      if (arr.length === 1) {
+      // console.log(arr)
+      if (arr.length === 1 && arr[0]["child"]) {
         arr = arr[0]["child"];
+      } else if(arr.length === 1 && !arr[0]['child']) {
+        return [];
       }
       const reg = /^h[1-6]$/;
       const newArr = [];
@@ -167,7 +234,7 @@ export default {
           });
         }
       }
-      console.log(newArr);
+      // console.log(newArr);
       return newArr;
     },
     getHText(HList) {
@@ -186,12 +253,26 @@ export default {
       const temp = obj.text.replace(/&nbsp;/, "");
       return temp;
     },
+    // 点击了分享
+    handleShareClick() {
+      copy(
+        `【《${this.blog.title}》——知识星球  】 ${window.location.href}`
+      ).then(() => {
+        this.$message.success("已复制到剪贴板");
+      });
+    },
+    handleLikeClick() {
+      this.likeed = !this.likeed;
+      // console.log(this.likeed)
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+@import url("//at.alicdn.com/t/font_2804341_lg176gsqn7.css");
 .detail {
+  scroll-behavior: smooth;
   background-color: rgb(244, 245, 245);
   .detail-container {
     width: 76%;
@@ -204,12 +285,44 @@ export default {
     .contentFixed {
       position: fixed;
       top: 20%;
-      left: 30px;
-      width: 80px;
+      left: 6%;
+      width: 50px;
       height: 500px;
-      background-color: red;
       box-sizing: border-box;
-      padding: 20px 10px;
+      div {
+        &.like,
+        &.comment,
+        &.share,
+        &.report {
+          cursor: pointer;
+          position: relative;
+          width: 100%;
+          height: 50px;
+          margin-bottom: 20px;
+          border-radius: 50%;
+          text-align: center;
+          background-color: #fff;
+          line-height: 50px;
+          box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+          transition: 0.3s;
+          i {
+            font-weight: 500;
+            font-size: 22px;
+            color: #999;
+          }
+          span {
+            position: absolute;
+            top: 0;
+            left: 75%;
+          }
+        }
+        &:hover {
+          box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+          i {
+            color: #333;
+          }
+        }
+      }
     }
     .contentLeft {
       background-color: #fff;
@@ -273,7 +386,7 @@ export default {
       box-sizing: border-box;
       .right-user {
         width: 100%;
-        height: 250px;
+        // height: 260px;
         background-color: #fff;
         // border: 1px solid #111;
         margin-bottom: 20px;
@@ -309,21 +422,22 @@ export default {
               text-align: center;
               color: rgb(123, 185, 255);
               font-weight: 700;
-              margin-right: 5px;
+              margin-right: 8px;
+              font-size: 18px;
             }
             span {
               font-size: 22px;
-              margin: 0 2px;
-              color: aqua;
+              margin: -1px 4px 0 4px;
+              color: #87d068;
             }
           }
         }
       }
-      .catalogue{
+      .catalogue {
         background-color: #fff;
         padding: 10px;
         // text-align: center;
-        .text{
+        .text {
           // text-align: center;
           text-indent: 2px;
           font-size: 18px;
