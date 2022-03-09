@@ -1,7 +1,7 @@
 <template>
   <Layout>
     <template>
-      <div class="detail">
+      <div class="detail" v-if="blogShow">
         <div class="detail-container">
           <div class="contentFixed">
             <div class="like" @click="handleLikeClick">
@@ -75,10 +75,20 @@
             <div class="middle"></div>
             <div class="footer" id="comment">
               <h2 class="commitTitle">评论</h2>
-              <WrtiteComment
+              <WriteComment
+                :avatar="avatar"
                 :loading="publishLoading"
                 @handlePublishComment="handlePublishComment"
               />
+              <div class="list">
+                <CommentList
+                  :blog="blog"
+                  :total="commentReq.total"
+                  :commentList="commentList"
+                  @handleDelete="handleDelete"
+                  @handlePageChange="handlePageChange"
+                />
+              </div>
             </div>
           </div>
           <div class="contentRight">
@@ -125,6 +135,7 @@
           </div>
         </div>
       </div>
+      <div class="" v-else>拼命加载</div>
     </template>
   </Layout>
 </template>
@@ -135,10 +146,11 @@
  */
 import { getArticleDetail } from "@/apis/article";
 import { like as likeApi, cancelLike } from "@/apis/like";
-import { publishComment } from "@/apis/comment";
+import { publishComment, getAllComment, deleteComment } from "@/apis/comment";
 import Layout from "@/layout";
 import Outline from "../Outline/indexJSX.jsx";
-import WrtiteComment from "./components/WriteComment.vue";
+import WriteComment from "./components/WriteComment.vue";
+import CommentList from "./components/CommentList.vue";
 import { getItem } from "@/utils/auth";
 import moment from "moment";
 import copy from "clipboard-copy";
@@ -152,12 +164,16 @@ export default {
   components: {
     Layout,
     Outline,
-    WrtiteComment,
+    WriteComment,
+    CommentList,
   },
 
   computed: {
     blogList() {
       return this.$store.getters.blogList;
+    },
+    blogShow() {
+      return Object.keys(this.blog).length > 0;
     },
     tag() {
       return this.blog.Label.tag;
@@ -170,6 +186,8 @@ export default {
     this.articleId = this.$route.params.id;
     if (this.blogList.length > 0) {
       this.blog = this.getNowArticle(this.blogList, this.articleId);
+      this.commentReq.articleId = this.blog.id;
+      this.getComment();
     } else {
       // 尝试从localStorage中读取数据，如果有拿出来，没有的话掉接口
       const tempList = JSON.parse(getItem("bloglist"));
@@ -180,6 +198,8 @@ export default {
           this.getArticle(this.articleId);
         } else {
           this.blog = res;
+          this.commentReq.articleId = this.blog.id;
+          this.getComment();
         }
       } else {
         this.getArticle(this.articleId);
@@ -190,7 +210,9 @@ export default {
   },
   mounted() {
     // console.log('mounted start')
+    this.commentReq.articleId = this.blog.id;
     this.handList = this.getElement(html2json(this.blog.content).child);
+    // this.getComment();
     // console.log('mounted end')
   },
   data() {
@@ -200,6 +222,7 @@ export default {
       blog: {},
       handList: [],
       publishLoading: false,
+      commentList: [],
       likeNoActive: {
         backgroundColor: "#c2c8d1",
         color: "#fff",
@@ -209,6 +232,12 @@ export default {
         backgroundColor: "#1e80ff",
         color: "#fff",
         // boxShadow: "0 0 0 1px #d9d9d9 inset",
+      },
+      commentReq: {
+        articleId: "",
+        page: 1,
+        size: 5,
+        total:0
       },
     };
   },
@@ -221,12 +250,25 @@ export default {
       }
       return null;
     },
+    getComment() {
+      getAllComment({
+        ...this.commentReq,
+      }).then((res) => {
+        this.commentList = res.data.data;
+        this.commentReq.total = res.data.total
+      });
+    },
     getArticle(id) {
       // 掉接口获取文章详情
-      getArticleDetail(id).then((res) => {
-        this.blog = res.data;
-        this.handList = this.getElement(html2json(this.blog.content).child);
-      });
+      getArticleDetail(id)
+        .then((res) => {
+          this.blog = res.data;
+          this.commentReq.articleId = this.blog.id;
+          this.handList = this.getElement(html2json(this.blog.content).child);
+        })
+        .finally(() => {
+          this.getComment();
+        });
     },
     getElement(arr) {
       // console.log(arr)
@@ -286,7 +328,7 @@ export default {
         }).then((res) => {
           if (res.code === "200") {
             this.blog.likecount--;
-            this.$store.dispatch("like/deleteLike", res.data.id);
+            this.$store.dispatch("like/deleteLike", this.blog.id);
           }
         });
       } else {
@@ -324,27 +366,44 @@ export default {
       // 调接口
       this.publishLoading = true;
       publishComment({
-        objectId:this.blog.id,
-        content:value,
-        type:'art'
+        objectId: this.blog.id,
+        content: value,
+        type: "art",
       })
         .then((res) => {
           if (res.code === "200") {
             this.$message.success("发布成功");
             // 重新调获取列表接口
-            
+            this.blog.commentcount++;
+            this.getComment();
           }
         })
         .finally(() => {
           this.publishLoading = false;
         });
     },
+    handleDelete(obj) {
+      deleteComment({
+        articleId: this.blog.id,
+        id: obj.id,
+      }).then((res) => {
+        if (res.code === "200") {
+          this.$message.success("删除成功");
+          this.blog.commentcount --
+          this.getComment();
+        }
+      });
+    },
+    handlePageChange(page){
+      this.commentReq.page = page
+      this.getComment()
+    }
   },
 };
 </script>
 
 <style lang="scss" scoped>
-@import url("//at.alicdn.com/t/font_2804341_lg176gsqn7.css");
+@import url("//at.alicdn.com/t/font_2804341_k497wxbbpz.css");
 .detail {
   scroll-behavior: smooth;
   background-color: rgb(244, 245, 245);
@@ -457,6 +516,9 @@ export default {
           line-height: 30px;
           font-weight: 600;
           color: #252933;
+        }
+        .list {
+          margin-top: 20px;
         }
       }
     }

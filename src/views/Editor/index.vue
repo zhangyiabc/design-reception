@@ -362,7 +362,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import url('//at.alicdn.com/t/font_2804341_lg176gsqn7.css');
+@import url('//at.alicdn.com/t/font_2804341_k497wxbbpz.css');
 .header {
   height: 50px;
   display: flex;

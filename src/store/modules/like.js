@@ -45,7 +45,7 @@ const mutations = {
     state.likeList.push(likeObj)
   },
   DELETE_LIKE: (state, id) => {
-    state.likeList = state.likeList.filter(it => it.id != id)
+    state.likeList = state.likeList.filter(it => it.ArticleId != id)
   }
 }
 

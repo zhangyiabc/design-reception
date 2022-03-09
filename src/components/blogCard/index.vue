@@ -63,7 +63,8 @@ export default {
       default: () => {},
     },
   },
-  created() {
+  mounted() {
+    // console.log(this.blog)
     const result = this.isHas(this.$store.getters.likeList, this.blog.id);
     this.isLike = result;
   },
@@ -118,7 +119,7 @@ export default {
         }).then((res) => {
           if (res.code === "200") {
             this.blog.likecount--;
-            this.$store.dispatch("like/deleteLike", res.data.id);
+            this.$store.dispatch("like/deleteLike", this.blog.id);
           }
         });
       } else {
@@ -133,7 +134,7 @@ export default {
               id: res.data.id,
               title: this.blog.title,
               cover: this.blog.cover,
-              UserId: res.UserId,
+              UserId: this.blog.UserId,
               ArticleId: this.blog.id,
             });
           }
@@ -157,7 +158,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import url("//at.alicdn.com/t/font_2804341_lg176gsqn7.css");
+@import url("//at.alicdn.com/t/font_2804341_k497wxbbpz.css");
 .blog-card {
   padding: 10px;
   padding-bottom: 0;

@@ -33,6 +33,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    avatar:{
+      type:String,
+      default:''
+    }
   },
   watch: {
     loading: {
@@ -50,11 +54,7 @@ export default {
       showBtn: false,
     };
   },
-  computed: {
-    avatar() {
-      return this.$store.getters.info.UserInfo.avatar;
-    },
-  },
+
   methods: {
     handlePublishComment() {
       this.$emit("handlePublishComment", this.commentText);
