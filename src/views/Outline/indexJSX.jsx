@@ -24,6 +24,11 @@ export default {
       immediate: false
     }
   },
+  created(){
+    if(this.list.length > 0){
+      this.html = this.renderH2(this.outlineList);
+    }
+  },
   methods: {
     renderH2(HList) {
       if (HList.length == 0) {

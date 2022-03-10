@@ -24,8 +24,17 @@ const getArticleDetail = (id) => {
   })
 }
 
+const deleteArticle = (data) => {
+  return request({
+    url:"/api/article",
+    method:"DELETE",
+    data
+  })
+}
+
 export {
   getAllArticle,
   addArticle,
-  getArticleDetail
+  getArticleDetail,
+  deleteArticle
 }

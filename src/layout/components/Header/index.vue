@@ -104,6 +104,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { removeItem } from "@/utils/auth";
 import Login from "@/components/Login/index.vue";
 import Mantle from "@/components/Mantle/index.vue";
 import store from "@/store";
@@ -131,6 +132,8 @@ export default {
   methods: {
     goBack() {
       // console.log('会首页')
+      // 删除localStorage里面的缓存的列表
+      removeItem("bloglist");
       store.dispatch("search/changeKey", "");
     },
     onSearch(value) {
@@ -171,8 +174,8 @@ export default {
         this.$router.push({
           name: "Personal",
         });
-      }else if(key === '4'){
-        console.log('弹出我的微信二维码')
+      } else if (key === "4") {
+        console.log("弹出我的微信二维码");
       }
     },
     handleCancel(e) {

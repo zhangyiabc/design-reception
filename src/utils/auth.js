@@ -25,3 +25,7 @@ export function getItem(name) {
 export function setItem(name, value) {
   return localStorage.setItem(name, value)
 }
+
+export function removeItem(name){
+  localStorage.removeItem(name)
+}

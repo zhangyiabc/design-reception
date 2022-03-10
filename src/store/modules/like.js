@@ -27,7 +27,8 @@ const formatLike = (arr) => {
       ...item.Article,
       UserId: item.UserId,
       ArticleId: item.ArticleId,
-      id: item.id
+      id: item.id,
+      createdAt: item.createdAt
     })
   }
   return newArr

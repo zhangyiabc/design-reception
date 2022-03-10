@@ -128,9 +128,9 @@
                 </div>
               </div>
             </div>
-            <div class="catalogue">
+            <div class="catalogue"  >
               <div class="text">目录</div>
-              <Outline :list="handList" />
+              <Outline v-if="handList.length > 0" :list="handList" />
             </div>
           </div>
         </div>
@@ -187,6 +187,7 @@ export default {
     if (this.blogList.length > 0) {
       this.blog = this.getNowArticle(this.blogList, this.articleId);
       this.commentReq.articleId = this.blog.id;
+      this.handList = this.getElement(html2json(this.blog.content).child);
       this.getComment();
     } else {
       // 尝试从localStorage中读取数据，如果有拿出来，没有的话掉接口
@@ -199,6 +200,7 @@ export default {
         } else {
           this.blog = res;
           this.commentReq.articleId = this.blog.id;
+          this.handList = this.getElement(html2json(this.blog.content).child);
           this.getComment();
         }
       } else {
@@ -211,7 +213,8 @@ export default {
   mounted() {
     // console.log('mounted start')
     this.commentReq.articleId = this.blog.id;
-    this.handList = this.getElement(html2json(this.blog.content).child);
+    
+    
     // this.getComment();
     // console.log('mounted end')
   },
@@ -271,7 +274,6 @@ export default {
         });
     },
     getElement(arr) {
-      // console.log(arr)
       if (arr.length === 1 && arr[0]["child"]) {
         arr = arr[0]["child"];
       } else if (arr.length === 1 && !arr[0]["child"]) {
@@ -362,6 +364,7 @@ export default {
       }
       return false;
     },
+    // 发布一条评论
     handlePublishComment(value) {
       // 调接口
       this.publishLoading = true;
@@ -403,7 +406,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import url("//at.alicdn.com/t/font_2804341_k497wxbbpz.css");
+@import url("//at.alicdn.com/t/font_2804341_ncgv9nsirnk.css");
 .detail {
   scroll-behavior: smooth;
   background-color: rgb(244, 245, 245);
