@@ -2,34 +2,91 @@
   <div class="search-container">
     <Layout>
       <template>
-        可选择tab ------ 文章  用户
-        文章页面下
-        这个页面进行展示筛选结果，并且把结果中的关键字标记为红色
-        <p>下面还应该有分页</p>
-
-        用户下
-        显示用户
-        一条一条的用户 用户信息右侧可以去他的主页，点击用户昵称可以去他的主页
-        并且把用户的昵称关键字标红
-        <p>分页</p>
+        <a-affix :offset-top="0">
+          <div class="top">
+            <div class="content">
+              <div :class="tab === 1?'active':''" @click="handleTabChange(1)">文章</div>
+              <div :class="tab === 2?'active':''" @click="handleTabChange(2)">用户</div>
+            </div>
+          </div>
+        </a-affix>
+        <div class="searchContent">
+          <SearchBlog v-if="tab===1" />
+          <SearchUser v-if="tab===2" />
+        </div>
       </template>
     </Layout>
   </div>
 </template>
 
 <script>
-import store from '@/store'
-import Layout from '@/layout'
+import store from "@/store";
+import Layout from "@/layout";
+import SearchBlog from './SearchBlog/index.vue'
+import SearchUser from './SearchUser/index.vue'
 export default {
-  components:{
-    Layout
+  components: {
+    Layout,
+    SearchBlog,
+    SearchUser
   },
-  created(){
-    store.dispatch('search/changeKey',this.$route.query.query)
-  }
-}
+  created() {
+    
+    store.dispatch("search/changeKey", this.$route.query.query);
+  },
+  data(){
+    return {
+      tab:1,
+    }
+  },
+  methods: {
+    handleTabChange(tab) {
+      console.log(tab);
+      this.tab = tab
+    },
+  },
+};
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.search-container {
+  padding-bottom:20px;
+  min-height: 100vh;
+  background-color: rgb(244, 245, 245);
+  .top {
+    border-top: 1px #e3e5e7 solid;
+    border-bottom: 1px #e3e5e7 solid;
+    background-color: #fff;
+    box-sizing: border-box;
+    height: 50px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    .content {
+      width: 70%;
+      margin: 0 auto;
+      display: flex;
+      height: 100%;
+      
+      div{
+        padding: 0 10px;
+        line-height: 50px;
+        margin: 0 10px;
+        color: #333;
+        cursor: pointer;
+        &:hover{
+          color:#007fff;
+        }
+        &.active{
+          color:#007fff;
+        }
+      }
+    }
+  }
+  .searchContent {
+    width: 70%;
+    margin: 0 auto;
+    margin-top: 20px;
+    background-color: #fff;
+    padding: 20px;
+  }
+}
 </style>
