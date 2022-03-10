@@ -4,35 +4,18 @@
       <div class="user-info-container">
         <div class="userInfoContent">
           <div class="contentLeft">
-            <div class="userInfo">
-              <div class="infoLeft">
-                左边头像
-              </div>
-              <div class="infoRight">
-                右边信息
-                昵称
-                个性签名
-                来知识星球时间（当前时间 - createdAt）
-              </div>
+            <div class="userInfo" v-if="showHeader">
+              <UserHeader :isPerson="false" :info="UserInfo" />
             </div>
             <div class="tabHeader">
               <div class="tab">文章</div>
-              <div class="search">
-                状态查
-                名字查
-              </div>
+              <div class="search">状态查 名字查</div>
             </div>
-            <div class="list">
-              文章列表
-            </div>
-            <div class="footer">
-              页码
-            </div>
+            <div class="list">文章列表</div>
+            <div class="footer">页码</div>
           </div>
           <div class="contentRight">
-            <div class="achievement">
-              成就
-            </div>
+            <div class="achievement">成就</div>
           </div>
         </div>
       </div>
@@ -42,9 +25,32 @@
 
 <script>
 import Layout from "@/layout";
+import UserHeader from "@/components/UserHeader";
+
+import { getUserDetail } from "@/apis/user";
 export default {
   components: {
     Layout,
+    UserHeader,
+  },
+  data() {
+    return {
+      id: "",
+      UserInfo: {},
+      showHeader: false,
+    };
+  },
+  created() {
+    this.id = this.$route.params.id;
+    this.getUserInfo();
+  },
+  methods: {
+    getUserInfo() {
+      getUserDetail(this.id).then((res) => {
+        this.showHeader = true;
+        this.UserInfo = res.data;
+      });
+    },
   },
 };
 </script>
@@ -53,12 +59,19 @@ export default {
 .user-info-container {
   background-color: rgb(244, 245, 245);
   .userInfoContent {
-    width: 70%;
-    margin: 0 auto;
+    width: 56%;
+    margin: 20px auto;
     display: flex;
-    .contentLeft{
-      background-color: red;
-      width: 70%;
+    justify-content: space-between;
+    .contentLeft {
+      width: 74%;
+      .userInfo{
+        background-color: #fff;
+      }
+    }
+    .contentRight{
+      width: 24%;
+      background-color: palegoldenrod;
     }
   }
 }
