@@ -137,6 +137,7 @@ import LikeCard from "./Card/LikeCard.vue";
 import { mapGetters } from "vuex";
 import UserHeader from "@/components/UserHeader";
 import { getAllArticle, deleteArticle } from "@/apis/article";
+import {getItem} from '@/utils/auth'
 export default {
   components: {
     Layout,
@@ -199,11 +200,15 @@ export default {
     },
     getMyArticle() {
       this.getBlogReq.UserId = this.UserInfo.id;
+      console.log(this.getBlogReq.UserId)
+      if(!this.getBlogReq.UserId ){
+        this.getBlogReq.UserId = +getItem('id')
+      }
+      console.log(this.getBlogReq.UserId)
       getAllArticle({
         ...this.getBlogReq,
       })
         .then((res) => {
-          console.log(res)
           this.blogLoading = true;
           this.blogList = res.data.data;
           this.getBlogReq.total = res.data.total;

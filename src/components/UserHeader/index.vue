@@ -55,10 +55,10 @@ export default {
     border-bottom: 1px solid #e4e6eb;
     padding-bottom: 15px;
     .headerLeft {
-      width: 10%;
+      width: 15%;
     }
     .headerRight {
-      width: 86%;
+      width: 83%;
       position: relative;
       .infoRight {
         .name {

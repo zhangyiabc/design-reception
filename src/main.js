@@ -34,13 +34,14 @@ const app = new Vue({
 })
 
 app.$socket.connect()
-app.$mount('#app')
+
 store.dispatch('user/whoami').then(res => {
   app.$socket.emit('login', {
     userId: res.id
   })
-  store.dispatch('like/getLikeList',{
+  store.dispatch('like/getLikeList', {
     type: "user",
     id: res.id,
   })
 })
+app.$mount('#app')

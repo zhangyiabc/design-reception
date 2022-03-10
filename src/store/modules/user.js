@@ -1,7 +1,7 @@
 // 关于用户登录相关
 import { message } from 'ant-design-vue';
 import { login, getUserDetail, whoami as whoamiApi } from '@/apis/user'
-import { getToken, getCookie, } from '@/utils/auth'
+import { getToken, getCookie, setItem } from '@/utils/auth'
 
 const getDefaultState = () => {
   return {
@@ -47,6 +47,7 @@ const actions = {
           commit('SET_TOKEN', token)
           commit('SET_LOGIN', true)
           commit('SET_ID', data.id)
+          setItem('id',data.id)
           delete data.password
           resolve(data)
         }
@@ -74,6 +75,7 @@ const actions = {
         commit('SET_INFO', data)
         commit('SET_LOGIN', true)
         commit('SET_ID', data.id)
+        setItem('id',data.id)
         // 拿到用户id调一次点赞接口，查看这个用户点赞过哪些文章
         // store.dispatch('like/getLikeList', { type: 'user', id: res.id })
         resolve(data)

@@ -128,7 +128,7 @@
                 </div>
               </div>
             </div>
-            <div class="catalogue"  >
+            <div class="catalogue">
               <div class="text">目录</div>
               <Outline v-if="handList.length > 0" :list="handList" />
             </div>
@@ -181,6 +181,9 @@ export default {
     avatar() {
       return this.blog.User.UserInfo.avatar;
     },
+    likeList() {
+      return this.$store.getters.likeList;
+    },
   },
   created() {
     this.articleId = this.$route.params.id;
@@ -207,16 +210,20 @@ export default {
         this.getArticle(this.articleId);
       }
     }
-    const result = this.isHas(this.$store.getters.likeList, this.blog.id);
-    this.likeed = result;
   },
   mounted() {
-    // console.log('mounted start')
     this.commentReq.articleId = this.blog.id;
-    
-    
-    // this.getComment();
-    // console.log('mounted end')
+    const result = this.isHas(this.likeList, this.articleId);
+    this.likeed = result;
+    console.log(this.likeed)
+  },
+  watch: {
+    likeList: {
+      handler: function () {
+        const result = this.isHas(this.likeList, this.articleId);
+        this.likeed = result;
+      },
+    },
   },
   data() {
     return {
@@ -240,7 +247,7 @@ export default {
         articleId: "",
         page: 1,
         size: 5,
-        total:0
+        total: 0,
       },
     };
   },
@@ -258,7 +265,7 @@ export default {
         ...this.commentReq,
       }).then((res) => {
         this.commentList = res.data.data;
-        this.commentReq.total = res.data.total
+        this.commentReq.total = res.data.total;
       });
     },
     getArticle(id) {
@@ -392,15 +399,15 @@ export default {
       }).then((res) => {
         if (res.code === "200") {
           this.$message.success("删除成功");
-          this.blog.commentcount --
+          this.blog.commentcount--;
           this.getComment();
         }
       });
     },
-    handlePageChange(page){
-      this.commentReq.page = page
-      this.getComment()
-    }
+    handlePageChange(page) {
+      this.commentReq.page = page;
+      this.getComment();
+    },
   },
 };
 </script>

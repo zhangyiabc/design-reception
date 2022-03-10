@@ -132,6 +132,7 @@ export default {
     .info {
       margin-top: 10px;
       display: flex;
+      justify-content: space-between;
       height: 40px;
       .cover {
         width: 15%;
@@ -141,7 +142,7 @@ export default {
         }
       }
       .abstract {
-        width: 80%;
+        width: 82%;
         height: 50px;
       }
     }
