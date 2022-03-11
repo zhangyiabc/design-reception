@@ -39,9 +39,20 @@ store.dispatch('user/whoami').then(res => {
   app.$socket.emit('login', {
     userId: res.id
   })
+  // whoami 获取用户信息
   store.dispatch('like/getLikeList', {
     type: "user",
     id: res.id,
+  })
+  // 获取个人信息
+  store.dispatch('notice/setUserNotice', {
+    status: "unread",
+    targetAuthorId: res.id
+  })
+  // 获取系统信息
+  store.dispatch('notice/setAdminNotice', {
+    status: "unread",
+    targetAuthorId: res.id
   })
 })
 app.$mount('#app')

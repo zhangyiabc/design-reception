@@ -7,6 +7,7 @@ import setting from './modules/setting'
 import article from './modules/article'
 import label from './modules/label'
 import like from './modules/like'
+import notice from './modules/notice'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -19,7 +20,8 @@ export default new Vuex.Store({
     setting,
     label,
     article,
-    like
+    like,
+    notice
   },
   getters
 })
