@@ -41,7 +41,7 @@ export default {
         page: 1,
         size: 5,
         total: 0,
-        review: "success",
+        review: "all",
         title: "",
       },
     };
@@ -75,7 +75,6 @@ export default {
         });
     },
     onPagerChange(page) {
-      console.log(page);
       this.reqBody.page = page
       this.getAllList()
     },

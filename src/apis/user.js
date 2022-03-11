@@ -23,6 +23,14 @@ export function getUserDetail(id) {
   })
 }
 
+export function getAllUsers(data) {
+  return request({
+    url: "/api/user",
+    method: "GET",
+    params: data
+  })
+}
+
 export function whoami() {
   return request({
     url: '/api/user/whoami',
