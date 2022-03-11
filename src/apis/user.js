@@ -37,3 +37,12 @@ export function whoami() {
     method: "GET"
   })
 }
+
+export function orderUser(data){
+  return request({
+    url:"/api/user/order",
+    method:"GET",
+    params:data
+  })
+
+}

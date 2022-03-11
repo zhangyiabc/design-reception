@@ -74,7 +74,7 @@
                         </a-row>
                       </a-form>
                     </div>
-                    <div v-if="blogLoading" class="list">
+                    <div v-if="!blogLoading" class="list">
                       <template v-for="blog of blogList">
                         <BlogCard
                           :key="blog.id"
@@ -82,6 +82,9 @@
                           @handleDeleteClick="handleDeleteClick"
                         />
                       </template>
+                    </div>
+                    <div class="loading" v-if="blogLoading">
+                      <a-spin class="spin" size="large" tip="玩命加载中..." />
                     </div>
                     <div class="footer">
                       <a-pagination
@@ -99,10 +102,13 @@
                     我的推荐
                   </span>
                   <div class="recommend">
-                    <div class="list" v-if="likeLoading">
+                    <div class="list" v-if="!likeLoading">
                       <template v-for="like of likeList">
                         <LikeCard :like="like" :key="like.id" />
                       </template>
+                    </div>
+                    <div class="loading" v-if="likeLoading">
+                      <a-spin class="spin" size="large" tip="玩命加载中..." />
                     </div>
                     <div class="footer">
                       <a-pagination
@@ -137,7 +143,7 @@ import LikeCard from "./Card/LikeCard.vue";
 import { mapGetters } from "vuex";
 import UserHeader from "@/components/UserHeader";
 import { getAllArticle, deleteArticle } from "@/apis/article";
-import {getItem} from '@/utils/auth'
+import { getItem } from "@/utils/auth";
 export default {
   components: {
     Layout,
@@ -199,22 +205,24 @@ export default {
       console.log("点击了修改个人信息");
     },
     getMyArticle() {
+      this.blogLoading = true
       this.getBlogReq.UserId = this.UserInfo.id;
-      console.log(this.getBlogReq.UserId)
-      if(!this.getBlogReq.UserId ){
-        this.getBlogReq.UserId = +getItem('id')
+      console.log(this.getBlogReq.UserId);
+      if (!this.getBlogReq.UserId) {
+        this.getBlogReq.UserId = +getItem("id");
       }
-      console.log(this.getBlogReq.UserId)
+      console.log(this.getBlogReq.UserId);
       getAllArticle({
         ...this.getBlogReq,
       })
         .then((res) => {
-          this.blogLoading = true;
+          
           this.blogList = res.data.data;
           this.getBlogReq.total = res.data.total;
         })
         .finally(() => {
           this.initLike();
+          this.blogLoading = false;
         });
     },
     initLike() {
@@ -228,6 +236,7 @@ export default {
         let index = parseInt(i / 5);
         // console.log(index)
         this.allLikeList[index].push(temp[i]);
+        
       }
       this.getNowLike();
     },
@@ -240,17 +249,17 @@ export default {
       this.getNowLike();
     },
     getNowLike() {
-      this.likeLoading = true;
+      this.likeLoading = false;
       this.likeList = this.allLikeList[this.getLikeReq.page - 1];
     },
     handleDeleteClick(id) {
-      deleteArticle({id}).then(res => {
-        if(res.code === '200'){
-          this.$message.success('删除成功')
-          this.getBlogReq.page = 1
-          this.getMyArticle()
+      deleteArticle({ id }).then((res) => {
+        if (res.code === "200") {
+          this.$message.success("删除成功");
+          this.getBlogReq.page = 1;
+          this.getMyArticle();
         }
-      })
+      });
     },
   },
 };
@@ -295,6 +304,11 @@ export default {
   .contentRight {
     width: 24%;
     background-color: palegoldenrod;
+  }
+  .loading{
+    display: flex;
+    margin-top: 30px;
+    justify-content: center;
   }
 }
 .main {
