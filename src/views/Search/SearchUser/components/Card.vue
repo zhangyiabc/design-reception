@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <div class="content">
+    <div class="content" @click="handleClick">
       <div class="left">
         <a-avatar v-if="!isSvg" :size="64" :src="avatar" />
         <div v-if="isSvg" class="svg" v-html="svg"></div>
@@ -73,12 +73,24 @@ export default {
       }
     },
     formatAvatar(avatar) {
+      if(!this.isSvg){
+        return 
+      }
       fetch(avatar)
         .then((res) => res.text())
         .then((svg) => {
           this.svg = svg;
         });
     },
+    handleClick(){
+       this.$router.push({
+        path: "/user",
+        name: "UserInfo",
+        params: {
+          id: this.user.id,
+        },
+      });
+    }
   },
 };
 </script>

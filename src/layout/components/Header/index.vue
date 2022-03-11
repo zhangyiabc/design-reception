@@ -65,10 +65,11 @@
           <a-icon class="icon-font" type="message" theme="twoTone" />
         </a-badge>
       </div>
-      <div class="login-btn">
+      <div class="login-btn" v-if="Object.keys(userInfo).length > 0">
         <a-button v-if="!userInfo.id" @click="handleLogin">登录</a-button>
-        <a-dropdown v-if="userInfo.id">
-          <a-avatar :size="58" icon="user" :src="userInfo.UserInfo.avatar" />
+        <a-dropdown v-if="userInfo.id && avatar">
+          <a-avatar v-if="!isSvg" :size="58" icon="user" :src="userInfo.UserInfo.avatar" />
+          <div v-if="isSvg" :style="{width:'58px',height:'58px'}" v-html="svg"></div>
           <a-menu class="menus" slot="overlay" @click="handleMenuClick">
             <a-menu-item key="1"
               ><a-icon class=".menu-ico" type="edit" />
@@ -118,18 +119,56 @@ export default {
       isShowLogin: "isShowMask",
       userInfo: "info",
     }),
+    avatar() {
+      console.log(this.userInfo.UserInfo.avatar)
+      return this.userInfo.UserInfo.avatar || '';
+    },
+    isSvg() {
+      if (
+        this.avatar &&
+        this.avatar.indexOf("https://api.multiavatar.com/") == 0
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  },
+  watch:{
+    userInfo:{
+      handler:function(){
+        console.log(this.avatar)
+        this.formatAvatar(this.avatar);
+      },
+      // immediate:true
+    }
   },
   mounted() {
     // console.log(this.userInfo);
+    
   },
   data() {
     return {
       // isShowLogin:false,
       count: 10,
+      svg:"",
       inputText: store.getters.key || "",
     };
   },
   methods: {
+    formatAvatar(avatar) {
+      if(!this.isSvg){
+        return 
+      }
+      if(!avatar){
+        return
+      }
+      fetch(avatar)
+        .then((res) => res.text())
+        .then((svg) => {
+          this.svg = svg;
+        });
+    },
     goBack() {
       // console.log('会首页')
       // 删除localStorage里面的缓存的列表

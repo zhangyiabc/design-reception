@@ -52,7 +52,8 @@
               <div class="user-info">
                 <div class="left-info">
                   <div class="avatar">
-                    <a-avatar :size="64" icon="user" :src="avatar" />
+                    <a-avatar v-if="!isSvg"  :size="64" icon="user" :src="avatar" />
+                    <div v-if="isSvg" :style="{width:'64px',height:'64px'}" v-html="svg"></div>
                   </div>
                   <div class="info-detail">
                     <p class="author">{{ blog.User.author }}</p>
@@ -95,7 +96,8 @@
             <div class="right-user">
               <div class="right-user-info">
                 <div class="avatar">
-                  <a-avatar :size="60" :src="avatar" />
+                  <a-avatar v-if="!isSvg" :size="60" :src="avatar" />
+                  <div v-if="isSvg" :style="{width:'60px',height:'60px'}"  v-html="svg"></div>
                 </div>
                 <div class="avatar-right">
                   <p>{{ blog.User.author }}</p>
@@ -173,20 +175,31 @@ export default {
       return this.$store.getters.blogList;
     },
     blogShow() {
-      return Object.keys(this.blog).length > 0;
+      return Object.keys(this.blog).length > 0 && this.avatar;
     },
     tag() {
       return this.blog.Label.tag;
     },
     avatar() {
-      return this.blog.User.UserInfo.avatar;
+      return this.blog.User?.UserInfo?.avatar;
     },
     likeList() {
       return this.$store.getters.likeList;
     },
+    isSvg() {
+      if (
+        this.avatar &&
+        this.avatar.indexOf("https://api.multiavatar.com/") == 0
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
   created() {
     this.articleId = this.$route.params.id;
+    
     if (this.blogList.length > 0) {
       this.blog = this.getNowArticle(this.blogList, this.articleId);
       this.commentReq.articleId = this.blog.id;
@@ -224,9 +237,15 @@ export default {
         this.likeed = result;
       },
     },
+    avatar:{
+      handler:function(){
+        this.formatAvatar(this.avatar);
+      }
+    }
   },
   data() {
     return {
+      svg:'',
       articleId: "",
       likeed: false,
       blog: {},
@@ -252,6 +271,16 @@ export default {
     };
   },
   methods: {
+    formatAvatar(avatar) {
+      if(!this.isSvg){
+        return 
+      }
+      fetch(avatar)
+        .then((res) => res.text())
+        .then((svg) => {
+          this.svg = svg;
+        });
+    },
     getNowArticle(arr, id) {
       for (const item of arr) {
         if (item.id == id) {

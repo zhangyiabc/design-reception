@@ -1,7 +1,8 @@
 <template>
   <div class="commentCard">
     <div class="cardLeft">
-      <a-avatar :size="40" :src="avatar" />
+      <a-avatar v-if="!isSvg"  :size="40" :src="avatar" />
+      <div v-if="isSvg" :style="{width:'40px',height:'40px'}" v-html="svg"></div>
     </div>
     <div class="cardRight">
       <div class="name">{{ comment.User.author }}</div>
@@ -42,6 +43,7 @@ export default {
   },
   data() {
     return {
+      svg:'',
       showBtn: false,
     };
   },
@@ -49,9 +51,20 @@ export default {
     avatar() {
       return this.comment.User.UserInfo.avatar;
     },
+    isSvg() {
+      if (
+        this.avatar &&
+        this.avatar.indexOf("https://api.multiavatar.com/") == 0
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
   created() {
     this.showBtn = this.judgePower();
+    this.formatAvatar(this.avatar);
   },
   methods: {
     judgePower() {
@@ -64,6 +77,16 @@ export default {
     },
     handleDelete() {
       this.$emit("handleDelete", { id: this.comment.id });
+    },
+    formatAvatar(avatar) {
+      if(!this.isSvg){
+        return 
+      }
+      fetch(avatar)
+        .then((res) => res.text())
+        .then((svg) => {
+          this.svg = svg;
+        });
     },
   },
 };

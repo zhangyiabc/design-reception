@@ -1,7 +1,8 @@
 <template>
   <div class="wrtiteComment">
     <div class="left">
-      <a-avatar :size="64" :src="avatar" />
+      <a-avatar v-if="!isSvg" :size="64" :src="avatar" />
+      <div v-if="isSvg" :style="{width:'64px',height:'64px'}" v-html="svg"></div>
     </div>
     <div class="right">
       <a-textarea
@@ -38,6 +39,18 @@ export default {
       default:''
     }
   },
+  computed:{
+    isSvg() {
+      if (
+        this.avatar &&
+        this.avatar.indexOf("https://api.multiavatar.com/") == 0
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  },
   watch: {
     loading: {
       handler: function (oldValue,newValue) {
@@ -50,11 +63,14 @@ export default {
   },
   data() {
     return {
+      svg:'',
       commentText: "",
       showBtn: false,
     };
   },
-
+  created(){
+    this.formatAvatar(this.avatar);
+  },
   methods: {
     handlePublishComment() {
       this.$emit("handlePublishComment", this.commentText);
@@ -65,6 +81,16 @@ export default {
       } else {
         this.showBtn = false;
       }
+    },
+    formatAvatar(avatar) {
+      if(!this.isSvg){
+        return 
+      }
+      fetch(avatar)
+        .then((res) => res.text())
+        .then((svg) => {
+          this.svg = svg;
+        });
     },
   },
 };

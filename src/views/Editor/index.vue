@@ -12,7 +12,8 @@
           <a-button type="primary" @click="handlePublish"> 发布 </a-button>
         </div>
         <div class="avatar">
-          <a-avatar :size="45" icon="user" :src="avatarUrl" />
+          <a-avatar v-if="!isSvg" :size="45" icon="user" :src="avatar" />
+          <div v-if="isSvg" :style="{width:'45px',height:'45px'}" v-html="svg"></div>
         </div>
       </div>
     </div>
@@ -144,6 +145,7 @@ import Outline from '../Outline/indexJSX.jsx'
 export default {
   data() {
     return {
+      svg:"",
       title: "",
       form: this.$form.createForm(this),
       visible: false,
@@ -170,11 +172,21 @@ export default {
     Outline
   },
   computed: {
-    avatarUrl() {
+    avatar() {
       return this.$store.getters.info.UserInfo.avatar || "";
     },
     abstractLength() {
       return this.article.abstract.length;
+    },
+    isSvg() {
+      if (
+        this.avatar &&
+        this.avatar.indexOf("https://api.multiavatar.com/") == 0
+      ) {
+        return true;
+      } else {
+        return false;
+      }
     },
   },
   created() {
@@ -239,6 +251,16 @@ export default {
     this.editor.create();
   },
   methods: {
+    formatAvatar(avatar) {
+      if(!this.isSvg){
+        return 
+      }
+      fetch(avatar)
+        .then((res) => res.text())
+        .then((svg) => {
+          this.svg = svg;
+        });
+    },
     handleCancel() {
       this.previewVisible = false;
     },

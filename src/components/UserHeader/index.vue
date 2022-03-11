@@ -2,7 +2,8 @@
   <div class="userHeader">
     <div class="top">
       <div class="headerLeft">
-        <a-avatar :size="90" icon="user" :src="info.UserInfo.avatar" />
+        <a-avatar v-if="!isSvg" :size="90" icon="user" :src="info.UserInfo.avatar" />
+        <div v-if="isSvg" :style="{width:'90px',height:'90px'}" v-html="svg"></div>
       </div>
       <div class="headerRight">
         <div class="infoRight">
@@ -11,7 +12,14 @@
             <i class="iconfont icon-qianming"></i>{{ info.UserInfo.autograph }}
           </div>
         </div>
-        <a-button class="modifyBtn" v-if="isPerson" size="large" @click="handleModify"> 修改个人资料 </a-button>
+        <a-button
+          class="modifyBtn"
+          v-if="isPerson"
+          size="large"
+          @click="handleModify"
+        >
+          修改个人资料
+        </a-button>
       </div>
     </div>
   </div>
@@ -33,14 +41,45 @@ export default {
       default: () => {},
     },
   },
+  data(){
+    return {
+      svg:''
+    }
+  },
+  computed: {
+    avatar() {
+      return this.info.UserInfo.avatar;
+    },
+    isSvg() {
+      if (
+        this.avatar &&
+        this.avatar.indexOf("https://api.multiavatar.com/") == 0
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  },
   created() {
     // console.log(this.info);
+    this.formatAvatar(this.avatar);
   },
-  methods:{
-    handleModify(){
-      this.$emit('handleModify')
-    }
-  }
+  methods: {
+    handleModify() {
+      this.$emit("handleModify");
+    },
+    formatAvatar(avatar) {
+      if(!this.isSvg){
+        return 
+      }
+      fetch(avatar)
+        .then((res) => res.text())
+        .then((svg) => {
+          this.svg = svg;
+        });
+    },
+  },
 };
 </script>
 
@@ -51,7 +90,7 @@ export default {
   .top {
     display: flex;
     justify-content: space-between;
-    
+
     border-bottom: 1px solid #e4e6eb;
     padding-bottom: 15px;
     .headerLeft {
@@ -68,13 +107,13 @@ export default {
           margin-bottom: 10px;
         }
         .autograph {
-          color: #72777b;;
+          color: #72777b;
           i {
             margin-right: 5px;
           }
         }
       }
-      .modifyBtn{
+      .modifyBtn {
         position: absolute;
         top: 50px;
         right: 0;
