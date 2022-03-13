@@ -37,7 +37,7 @@
           p-id="1037"
         ></path>
       </svg>
-      <span>IT分享博客</span>
+      <span>知识星球</span>
     </div>
     <div class="content">
       <router-link class="title" to="/"
@@ -60,16 +60,26 @@
       <div class="write">
         <a-button type="primary" @click="handleClick"> 开始创作 </a-button>
       </div>
-      <div class="message">
+      <div class="message" @click="handleGotoNotice">
         <a-badge :count="count">
-          <a-icon class="icon-font" type="message" theme="twoTone" />
+          <!-- <a-icon class="icon-font" type="message" theme="twoTone" /> -->
+          <i class="iconfont icon-xiaoxi1" style="fontSize:30px"></i>
         </a-badge>
       </div>
-      <div class="login-btn" v-if="Object.keys(userInfo).length > 0">
+      <div class="login-btn">
         <a-button v-if="!userInfo.id" @click="handleLogin">登录</a-button>
         <a-dropdown v-if="userInfo.id && avatar">
-          <a-avatar v-if="!isSvg" :size="58" icon="user" :src="userInfo.UserInfo.avatar" />
-          <div v-if="isSvg" :style="{width:'58px',height:'58px'}" v-html="svg"></div>
+          <a-avatar
+            v-if="!isSvg"
+            :size="58"
+            icon="user"
+            :src="userInfo.UserInfo.avatar"
+          />
+          <div
+            v-if="isSvg"
+            :style="{ width: '58px', height: '58px' }"
+            v-html="svg"
+          ></div>
           <a-menu class="menus" slot="overlay" @click="handleMenuClick">
             <a-menu-item key="1"
               ><a-icon class=".menu-ico" type="edit" />
@@ -118,10 +128,12 @@ export default {
     ...mapGetters({
       isShowLogin: "isShowMask",
       userInfo: "info",
+      userNoticeTotal: "userNoticeTotal",
+      adminNoticeTotal: "adminNoticeTotal",
     }),
     avatar() {
-      console.log(this.userInfo.UserInfo.avatar)
-      return this.userInfo.UserInfo.avatar || '';
+      // console.log(this.userInfo.UserInfo.avatar);
+      return this.userInfo.UserInfo.avatar || "";
     },
     isSvg() {
       if (
@@ -134,34 +146,48 @@ export default {
       }
     },
   },
-  watch:{
-    userInfo:{
-      handler:function(){
-        console.log(this.avatar)
+  watch: {
+    userInfo: {
+      handler: function () {
+        // console.log(this.avatar);
         this.formatAvatar(this.avatar);
       },
+
       // immediate:true
-    }
+    },
+    userNoticeTotal: {
+      handler: function () {
+        this.count =
+          store.getters.userNoticeTotal + store.getters.adminNoticeTotal;
+      },
+    },
+    adminNoticeTotal: {
+      handler:function(){
+        this.count =
+          store.getters.userNoticeTotal + store.getters.adminNoticeTotal;
+      }
+    },
   },
   mounted() {
     // console.log(this.userInfo);
-    
+    this.count = store.getters.userNoticeTotal + store.getters.adminNoticeTotal;
+    console.log(this.count);
   },
   data() {
     return {
       // isShowLogin:false,
       count: 10,
-      svg:"",
+      svg: "",
       inputText: store.getters.key || "",
     };
   },
   methods: {
     formatAvatar(avatar) {
-      if(!this.isSvg){
-        return 
+      if (!this.isSvg) {
+        return;
       }
-      if(!avatar){
-        return
+      if (!avatar) {
+        return;
       }
       fetch(avatar)
         .then((res) => res.text())
@@ -193,6 +219,11 @@ export default {
       this.$router.push({
         name: "Editor",
       });
+    },
+    handleGotoNotice(){
+      this.$router.push({
+        path:"/notice"
+      })
     },
     handleLogin() {
       // this.isShowLogin = true;
@@ -276,9 +307,17 @@ export default {
     align-items: center;
     justify-content: space-between;
     padding: 0 20px;
-    .icon-font {
-      font-size: 30px;
+    // .icon-font {
+    //   font-size: 30px;
+    //   cursor: pointer;
+    // }
+    .message{
       cursor: pointer;
+      &:hover{
+        i{
+          color: #1e80ff;
+        }
+      }
     }
   }
 }

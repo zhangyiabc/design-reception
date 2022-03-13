@@ -25,6 +25,12 @@ const mutations = {
   },
   SET_ADMIN_TOTAL: (state, total) => {
     state.adminNoticeTotal = total
+  },
+  REDUCE_USER_TOTAL:(state) => {
+    state.userNoticeTotal --
+  },
+  REDUCE_ADMIN_TOTAL:(state) => {
+    state.adminNoticeTotal --
   }
 }
 
@@ -50,6 +56,13 @@ const actions = {
         reject(err)
       })
     })
+  },
+  reduceUserTotal({commit}){
+    commit('REDUCE_USER_TOTAL')
+  },
+  reduceAdminTotal({commit}){
+    commit('REDUCE_ADMIN_TOTAL')
+
   }
 }
 

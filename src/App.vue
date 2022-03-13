@@ -12,7 +12,7 @@ export default {
     return {
       locale: zhCN,
     };
-  }
+  },
 };
 </script>
 <style lang="scss">

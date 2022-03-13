@@ -37,14 +37,14 @@
               <i class="iconfont icon-fenxiang" />
             </div> -->
             <a-divider />
-            <a-tooltip placement="top">
+            <!-- <a-tooltip placement="top">
               <template slot="title">
                 <span>举报此文章</span>
               </template>
               <div class="report">
                 <i class="iconfont icon-jubao"></i>
               </div>
-            </a-tooltip>
+            </a-tooltip> -->
           </div>
           <div class="contentLeft">
             <div class="contentDetail">

@@ -410,7 +410,7 @@ export default {
     // position: fixed;
     width: 100%;
     padding: 0 20px;
-    height: 52px;
+    height: 57px;
     display: flex;
     background-color: #fff;
     margin-bottom: 20px;
@@ -496,7 +496,7 @@ export default {
         }
       }
       .order {
-        padding: 20px;
+        padding:20px 12px;
         margin-top: 18px;
         background-color: #fff;
         .title {

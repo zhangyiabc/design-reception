@@ -14,7 +14,7 @@
         <div class="autograph">{{Info.UserInfo.autograph}}</div>
       </div>
       <div class="right">
-        <p>共发布<span>{{Info.count}}</span>篇文章</p>
+        <p>发布<span>{{Info.count}}</span>篇文章</p>
       </div>
     </div>
   </div>
@@ -75,11 +75,12 @@ export default {
   .content {
     width: 100%;
     display: flex;
+    justify-content: space-between;
     .left {
-      width: 15%;
+      width: 18%;
     }
     .middle {
-      width: 50%;
+      width: 44%;
       .author {
         font-size: 15px;
         color: #333;
@@ -90,7 +91,7 @@ export default {
       }
     }
     .right{
-      width: 32%;
+      flex: 1 1 auto;
       p{
         margin-top: 10px;
         line-height: 20px;
