@@ -72,7 +72,7 @@ export default {
     };
   },
   created() {
-    this.formatAvatar();
+    this.formatAvatar(this.avatar);
   },
   computed: {
     avatar() {

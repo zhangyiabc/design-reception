@@ -28,6 +28,9 @@
       />
       <button @click="handleLogin">登录</button>
     </div>
+    <div class="other">
+      没有账号？去这里<a-button  type="link" @click="handleToRegister">注册</a-button>吧~
+    </div>
   </div>
 </template>
 
@@ -73,6 +76,7 @@ export default {
             status: "unread",
             targetAuthorId: res.id,
           });
+          this.$router.push('/')
           // console.log(res);
           // console.log(this.$socket)
           this.$socket.emit("login", {
@@ -86,6 +90,9 @@ export default {
     handleBlur() {
       this.hasPassword = false;
     },
+    handleToRegister(){
+      this.$emit('handleToRegister')
+    }
   },
 };
 </script>

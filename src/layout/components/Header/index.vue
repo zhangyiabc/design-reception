@@ -104,9 +104,14 @@
       </div>
     </div>
     <div v-if="isShowLogin" class="login" @click="handleCancel">
-      <Mantle>
+      <Mantle v-if="showLogin">
         <template>
-          <Login />
+          <Login @handleToRegister="handleToRegister" />
+        </template>
+      </Mantle>
+      <Mantle v-if="!showLogin" :width="1200" >
+        <template>
+          <Register />
         </template>
       </Mantle>
     </div>
@@ -118,12 +123,14 @@ import { setItem, getItem } from "@/utils/auth";
 import { mapGetters } from "vuex";
 import { removeItem,removeToken } from "@/utils/auth";
 import Login from "@/components/Login/index.vue";
+import Register from '@/components/Register/index.vue'
 import Mantle from "@/components/Mantle/index.vue";
 import store from "@/store";
 export default {
   components: {
     Login,
     Mantle,
+    Register
   },
   computed: {
     ...mapGetters({
@@ -178,6 +185,7 @@ export default {
   data() {
     return {
       // isShowLogin:false,
+      showLogin:true,
       count: 10,
       svg: "",
       inputText: store.getters.key || "",
@@ -246,12 +254,13 @@ export default {
           userId: this.userInfo.id,
         });
         // 清除token、vuex中的该用户的信息
-        console.log('推出')
         removeToken()
         removeItem('svg')
         // 设置登录状态为未登录
         store.commit('user/RESET_STATE')
         store.commit('notice/RESET_STATE')
+        store.commit('like/SET_LIKELIST',[])
+        this.$router.push('/')
       } else if (key === "3") {
         window.open("https://github.com/zhangyiabc/design-reception");
       } else if (key === "2") {
@@ -269,6 +278,9 @@ export default {
       // this.isShowLogin = false;
       this.$store.dispatch("setting/setShow", false);
     },
+    handleToRegister(){
+      this.showLogin = false
+    }
   },
 };
 </script>

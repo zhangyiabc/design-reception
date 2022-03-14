@@ -68,6 +68,14 @@ export default {
     const result = this.isHas(this.$store.getters.likeList, this.blog.id);
     this.isLike = result;
   },
+  watch: {
+    ["$store.getters.likeList"]: {
+      handler: function () {
+        const result = this.isHas(this.$store.getters.likeList, this.blog.id);
+        this.isLike = result;
+      },
+    },
+  },
   methods: {
     handleLabelClick(e) {
       e.stopPropagation();
