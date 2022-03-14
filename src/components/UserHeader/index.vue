@@ -30,6 +30,7 @@
  * 传入是不是个人的信息（个人信息可以编辑个人资料，不是不能）
  * 点击个人资料，抛出点击事件
  */
+import {getItem} from '@/utils/auth'
 export default {
   props: {
     isPerson: {
@@ -71,6 +72,11 @@ export default {
     },
     formatAvatar(avatar) {
       if(!this.isSvg){
+        return 
+      }
+      const svg = getItem('svg')
+      if(svg){
+        this.svg = svg
         return 
       }
       fetch(avatar)

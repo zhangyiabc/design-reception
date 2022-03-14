@@ -63,7 +63,7 @@
       <div class="message" @click="handleGotoNotice">
         <a-badge :count="count">
           <!-- <a-icon class="icon-font" type="message" theme="twoTone" /> -->
-          <i class="iconfont icon-xiaoxi1" style="fontSize:30px"></i>
+          <i class="iconfont icon-xiaoxi1" style="fontsize: 30px"></i>
         </a-badge>
       </div>
       <div class="login-btn">
@@ -114,6 +114,7 @@
 </template>
 
 <script>
+import { setItem, getItem } from "@/utils/auth";
 import { mapGetters } from "vuex";
 import { removeItem } from "@/utils/auth";
 import Login from "@/components/Login/index.vue";
@@ -162,16 +163,17 @@ export default {
       },
     },
     adminNoticeTotal: {
-      handler:function(){
+      handler: function () {
         this.count =
           store.getters.userNoticeTotal + store.getters.adminNoticeTotal;
-      }
+      },
     },
   },
   mounted() {
     // console.log(this.userInfo);
     this.count = store.getters.userNoticeTotal + store.getters.adminNoticeTotal;
     console.log(this.count);
+    this.formatAvatar(this.avatar);
   },
   data() {
     return {
@@ -186,13 +188,20 @@ export default {
       if (!this.isSvg) {
         return;
       }
+      const svg = getItem("svg");
+      if (svg) {
+        this.svg = svg;
+        return;
+      }
       if (!avatar) {
         return;
       }
+      
       fetch(avatar)
         .then((res) => res.text())
         .then((svg) => {
           this.svg = svg;
+          setItem("svg", svg);
         });
     },
     goBack() {
@@ -220,10 +229,10 @@ export default {
         name: "Editor",
       });
     },
-    handleGotoNotice(){
+    handleGotoNotice() {
       this.$router.push({
-        path:"/notice"
-      })
+        path: "/notice",
+      });
     },
     handleLogin() {
       // this.isShowLogin = true;
@@ -311,10 +320,10 @@ export default {
     //   font-size: 30px;
     //   cursor: pointer;
     // }
-    .message{
+    .message {
       cursor: pointer;
-      &:hover{
-        i{
+      &:hover {
+        i {
           color: #1e80ff;
         }
       }

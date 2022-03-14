@@ -11,16 +11,20 @@
       </div>
       <div class="middle">
         <div class="author">{{ Info.author }}</div>
-        <div class="autograph">{{Info.UserInfo.autograph}}</div>
+        <div class="autograph">{{ Info.UserInfo.autograph }}</div>
       </div>
       <div class="right">
-        <p>发布<span>{{Info.count}}</span>篇文章</p>
+        <p>
+          发布<span>{{ Info.count }}</span
+          >篇文章
+        </p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { getItem } from "@/utils/auth";
 export default {
   props: {
     Info: {
@@ -57,6 +61,11 @@ export default {
       if (!this.isSvg) {
         return;
       }
+      const svg = getItem("svg");
+      if (svg) {
+        this.svg = svg;
+        return;
+      }
       fetch(avatar)
         .then((res) => res.text())
         .then((svg) => {
@@ -85,17 +94,17 @@ export default {
         font-size: 15px;
         color: #333;
       }
-      .autograph{
+      .autograph {
         color: #999;
         font-size: 13px;
       }
     }
-    .right{
+    .right {
       flex: 1 1 auto;
-      p{
+      p {
         margin-top: 10px;
         line-height: 20px;
-        span{
+        span {
           margin: 0 5px;
           color: rgb(81, 131, 113);
           font-size: 16px;

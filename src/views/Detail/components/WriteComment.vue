@@ -2,7 +2,11 @@
   <div class="wrtiteComment">
     <div class="left">
       <a-avatar v-if="!isSvg" :size="64" :src="avatar" />
-      <div v-if="isSvg" :style="{width:'64px',height:'64px'}" v-html="svg"></div>
+      <div
+        v-if="isSvg"
+        :style="{ width: '64px', height: '64px' }"
+        v-html="svg"
+      ></div>
     </div>
     <div class="right">
       <a-textarea
@@ -28,18 +32,20 @@
 </template>
 
 <script>
+import { getItem } from "@/utils/auth";
+
 export default {
   props: {
     loading: {
       type: Boolean,
       default: false,
     },
-    avatar:{
-      type:String,
-      default:''
-    }
+    avatar: {
+      type: String,
+      default: "",
+    },
   },
-  computed:{
+  computed: {
     isSvg() {
       if (
         this.avatar &&
@@ -53,9 +59,9 @@ export default {
   },
   watch: {
     loading: {
-      handler: function (oldValue,newValue) {
-        if(oldValue == false && newValue == true){
-          this.commentText = ''
+      handler: function (oldValue, newValue) {
+        if (oldValue == false && newValue == true) {
+          this.commentText = "";
         }
       },
       immediate: false,
@@ -63,12 +69,12 @@ export default {
   },
   data() {
     return {
-      svg:'',
+      svg: "",
       commentText: "",
       showBtn: false,
     };
   },
-  created(){
+  created() {
     this.formatAvatar(this.avatar);
   },
   methods: {
@@ -83,8 +89,13 @@ export default {
       }
     },
     formatAvatar(avatar) {
-      if(!this.isSvg){
-        return 
+      if (!this.isSvg) {
+        return;
+      }
+      const svg = getItem("svg");
+      if (svg) {
+        this.svg = svg;
+        return;
       }
       fetch(avatar)
         .then((res) => res.text())

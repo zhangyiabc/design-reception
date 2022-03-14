@@ -275,6 +275,11 @@ export default {
       if(!this.isSvg){
         return 
       }
+      const svg = getItem('svg')
+      if(svg){
+        this.svg = svg
+        return 
+      }
       fetch(avatar)
         .then((res) => res.text())
         .then((svg) => {

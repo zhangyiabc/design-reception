@@ -135,6 +135,7 @@
 </template>
 
 <script>
+import { getItem } from "@/utils/auth";
 import { upload } from "@/apis/upload";
 import { getAllLabel } from "@/apis/label";
 import { addArticle } from "@/apis/article";
@@ -191,6 +192,7 @@ export default {
   },
   created() {
     this.getLabelList();
+    this.formatAvatar(this.avatar)
   },
   mounted() {
     this.editor = new E(this.$refs.editor);
@@ -253,6 +255,11 @@ export default {
   methods: {
     formatAvatar(avatar) {
       if(!this.isSvg){
+        return 
+      }
+            const svg = getItem('svg')
+      if(svg){
+        this.svg = svg
         return 
       }
       fetch(avatar)

@@ -14,7 +14,7 @@
         </template>
         <div class="footer">
           <a-pagination
-            :defaultPageSize="5"
+            :defaultPageSize="8"
             :default-current="reqBody.page"
             :total="reqBody.total"
             @change="onPagerChange"
@@ -47,7 +47,7 @@ export default {
       imgSrc,
       reqBody: {
         page: 1,
-        size: 5,
+        size: 8,
         total: 0,
         status: "all",
       },

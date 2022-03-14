@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { getItem } from "@/utils/auth";
 import { getUserNoticeDetail } from "@/apis/notice";
 import moment from "moment";
 export default {
@@ -102,6 +103,11 @@ export default {
     formatAvatar(avatar) {
       if (!this.isSvg) {
         return;
+      }
+            const svg = getItem('svg')
+      if(svg){
+        this.svg = svg
+        return 
       }
       fetch(avatar)
         .then((res) => res.text())

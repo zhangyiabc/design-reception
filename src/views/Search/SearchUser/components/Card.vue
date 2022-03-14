@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import { getItem } from "@/utils/auth";
 export default {
   props: {
     user: {
@@ -73,8 +74,13 @@ export default {
       }
     },
     formatAvatar(avatar) {
-      if(!this.isSvg){
-        return 
+      if (!this.isSvg) {
+        return;
+      }
+      const svg = getItem("svg");
+      if (svg) {
+        this.svg = svg;
+        return;
       }
       fetch(avatar)
         .then((res) => res.text())
@@ -82,15 +88,15 @@ export default {
           this.svg = svg;
         });
     },
-    handleClick(){
-       this.$router.push({
+    handleClick() {
+      this.$router.push({
         path: "/user",
         name: "UserInfo",
         params: {
           id: this.user.id,
         },
       });
-    }
+    },
   },
 };
 </script>

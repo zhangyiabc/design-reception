@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import { getItem } from "@/utils/auth";
 import moment from "moment";
 import store from "@/store";
 export default {
@@ -80,6 +81,11 @@ export default {
     },
     formatAvatar(avatar) {
       if(!this.isSvg){
+        return 
+      }
+            const svg = getItem('svg')
+      if(svg){
+        this.svg = svg
         return 
       }
       fetch(avatar)
