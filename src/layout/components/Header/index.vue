@@ -116,7 +116,7 @@
 <script>
 import { setItem, getItem } from "@/utils/auth";
 import { mapGetters } from "vuex";
-import { removeItem } from "@/utils/auth";
+import { removeItem,removeToken } from "@/utils/auth";
 import Login from "@/components/Login/index.vue";
 import Mantle from "@/components/Mantle/index.vue";
 import store from "@/store";
@@ -246,7 +246,12 @@ export default {
           userId: this.userInfo.id,
         });
         // 清除token、vuex中的该用户的信息
+        console.log('推出')
+        removeToken()
+        removeItem('svg')
         // 设置登录状态为未登录
+        store.commit('user/RESET_STATE')
+        store.commit('notice/RESET_STATE')
       } else if (key === "3") {
         window.open("https://github.com/zhangyiabc/design-reception");
       } else if (key === "2") {

@@ -159,7 +159,7 @@
 
                 <div class="author">
                   欢迎使用， 尊敬的用户——<span>{{
-                    $store.getters.info.author
+                    $store.getters.info.author ? $store.getters.info.author :'游客用户'
                   }}</span>
                 </div>
               </div>

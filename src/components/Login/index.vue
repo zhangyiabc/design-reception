@@ -63,6 +63,16 @@ export default {
             type: "user",
             id: res.id,
           });
+          // 获取个人信息
+          store.dispatch("notice/setUserNotice", {
+            status: "unread",
+            targetAuthorId: res.id,
+          });
+          // 获取系统信息
+          store.dispatch("notice/setAdminNotice", {
+            status: "unread",
+            targetAuthorId: res.id,
+          });
           // console.log(res);
           // console.log(this.$socket)
           this.$socket.emit("login", {

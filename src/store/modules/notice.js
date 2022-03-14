@@ -14,6 +14,9 @@ const defaultState = () => {
 const state = defaultState()
 
 const mutations = {
+  RESET_STATE: (state) => {
+    Object.assign(state, defaultState())
+  },
   SET_USER_NOTICE: (state, notice) => {
     state.userNotice = notice
   },
