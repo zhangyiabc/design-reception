@@ -134,7 +134,7 @@ export default {
     }),
     avatar() {
       // console.log(this.userInfo.UserInfo.avatar);
-      return this.userInfo.UserInfo.avatar || "";
+      return this.userInfo?.UserInfo?.avatar || "";
     },
     isSvg() {
       if (

@@ -77,7 +77,8 @@
             <div class="footer" id="comment">
               <h2 class="commitTitle">评论</h2>
               <WriteComment
-                :avatar="avatar"
+                v-if="myAvatar"
+                :avatar="myAvatar"
                 :loading="publishLoading"
                 @handlePublishComment="handlePublishComment"
               />
@@ -174,8 +175,12 @@ export default {
     blogList() {
       return this.$store.getters.blogList;
     },
+
     blogShow() {
       return Object.keys(this.blog).length > 0 && this.avatar;
+    },
+    myAvatar(){
+      return this.$store.getters.info.UserInfo.avatar || ''
     },
     tag() {
       return this.blog.Label.tag;

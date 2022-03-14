@@ -47,6 +47,7 @@ export default {
   },
   computed: {
     isSvg() {
+      console.log(this.avatar)
       if (
         this.avatar &&
         this.avatar.indexOf("https://api.multiavatar.com/") == 0
