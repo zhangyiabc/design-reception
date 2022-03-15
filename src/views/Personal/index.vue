@@ -66,7 +66,7 @@
                               </a-select>
                             </a-form-item>
                           </a-col>
-                          <a-col :span="2">
+                          <a-col :span="3">
                             <a-button type="primary" html-type="submit">
                               查询
                             </a-button>
@@ -74,25 +74,33 @@
                         </a-row>
                       </a-form>
                     </div>
-                    <div v-if="!blogLoading" class="list">
-                      <template v-for="blog of blogList">
-                        <BlogCard
-                          :key="blog.id"
-                          :blog="blog"
-                          @handleDeleteClick="handleDeleteClick"
+                    <div v-if="!blogLoading">
+                      <div v-if="getBlogReq.total == 0" class="noData">
+                        <a-empty
+                          :imageStyle="{ height: '200px' }"
+                          :image="imgSrc"
                         />
-                      </template>
+                      </div>
+                      <div class="list" v-else>
+                        <template v-for="blog of blogList">
+                          <BlogCard
+                            :key="blog.id"
+                            :blog="blog"
+                            @handleDeleteClick="handleDeleteClick"
+                          />
+                        </template>
+                        <div class="footer">
+                          <a-pagination
+                            size="small"
+                            :defaultPageSize="5"
+                            :total="getBlogReq.total"
+                            @change="handleBlogPageChange"
+                          />
+                        </div>
+                      </div>
                     </div>
                     <div class="loading" v-if="blogLoading">
                       <a-spin class="spin" size="large" tip="玩命加载中..." />
-                    </div>
-                    <div class="footer">
-                      <a-pagination
-                        size="small"
-                        :defaultPageSize="5"
-                        :total="getBlogReq.total"
-                        @change="handleBlogPageChange"
-                      />
                     </div>
                   </div>
                 </a-tab-pane>
@@ -102,21 +110,29 @@
                     我的推荐
                   </span>
                   <div class="recommend">
-                    <div class="list" v-if="!likeLoading">
-                      <template v-for="like of likeList">
-                        <LikeCard :like="like" :key="like.id" />
-                      </template>
+                    <div v-if="!likeLoading">
+                      <div class="list" v-if="likeList.length > 0">
+                        <template v-for="like of likeList">
+                          <LikeCard :like="like" :key="like.id" />
+                        </template>
+                        <div class="footer">
+                          <a-pagination
+                            size="small"
+                            :defaultPageSize="5"
+                            :total="getLikeReq.total"
+                            @change="handleLikePageChange"
+                          />
+                        </div>
+                      </div>
+                      <div v-else class="noData">
+                        <a-empty
+                          :imageStyle="{ height: '200px' }"
+                          :image="imgSrc"
+                        />
+                      </div>
                     </div>
                     <div class="loading" v-if="likeLoading">
                       <a-spin class="spin" size="large" tip="玩命加载中..." />
-                    </div>
-                    <div class="footer">
-                      <a-pagination
-                        size="small"
-                        :defaultPageSize="5"
-                        :total="getLikeReq.total"
-                        @change="handleLikePageChange"
-                      />
                     </div>
                   </div>
                 </a-tab-pane>
@@ -137,6 +153,7 @@
  * 个人页面 可以展示个人发布过的文章
  * 可以按条件查询被驳回的文章、审核通过的文章
  */
+const imgSrc = require("@/assets/empty.png");
 import Layout from "@/layout";
 import BlogCard from "./Card/BlogCard.vue";
 import LikeCard from "./Card/LikeCard.vue";
@@ -158,6 +175,7 @@ export default {
   },
   data() {
     return {
+      imgSrc,
       form: this.$form.createForm(this, { name: "coordinated" }),
       blogList: [],
       allLikeList: [],
@@ -205,18 +223,15 @@ export default {
       console.log("点击了修改个人信息");
     },
     getMyArticle() {
-      this.blogLoading = true
+      this.blogLoading = true;
       this.getBlogReq.UserId = this.UserInfo.id;
-      console.log(this.getBlogReq.UserId);
       if (!this.getBlogReq.UserId) {
         this.getBlogReq.UserId = +getItem("id");
       }
-      console.log(this.getBlogReq.UserId);
       getAllArticle({
         ...this.getBlogReq,
       })
         .then((res) => {
-          
           this.blogList = res.data.data;
           this.getBlogReq.total = res.data.total;
         })
@@ -227,7 +242,11 @@ export default {
     },
     initLike() {
       this.likeLoading = true;
-      const temp = this.$store.getters.likeList;
+      const temp = this.$store.getters.likeList || [];
+      if(temp.length == 0){
+        this.likeLoading = false
+        return
+      }
       this.getLikeReq.total = temp.length;
       for (let i = 0; i < temp.length; i++) {
         if (i % 5 == 0) {
@@ -236,7 +255,6 @@ export default {
         let index = parseInt(i / 5);
         // console.log(index)
         this.allLikeList[index].push(temp[i]);
-        
       }
       this.getNowLike();
     },
@@ -305,7 +323,7 @@ export default {
     width: 24%;
     background-color: palegoldenrod;
   }
-  .loading{
+  .loading {
     display: flex;
     margin-top: 30px;
     justify-content: center;

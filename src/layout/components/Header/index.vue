@@ -71,13 +71,13 @@
         <a-dropdown v-if="userInfo.id && avatar">
           <a-avatar
             v-if="!isSvg"
-            :size="58"
+            :size="52"
             icon="user"
             :src="userInfo.UserInfo.avatar"
           />
           <div
             v-if="isSvg"
-            :style="{ width: '58px', height: '58px' }"
+            :style="{ width: '52px', height: '52px' }"
             v-html="svg"
           ></div>
           <a-menu class="menus" slot="overlay" @click="handleMenuClick">
@@ -109,9 +109,9 @@
           <Login @handleToRegister="handleToRegister" />
         </template>
       </Mantle>
-      <Mantle v-if="!showLogin" :width="1200" >
+      <Mantle v-if="!showLogin" :width="490" >
         <template>
-          <Register />
+          <Register @handleRegister="handleRegister" />
         </template>
       </Mantle>
     </div>
@@ -175,6 +175,7 @@ export default {
           store.getters.userNoticeTotal + store.getters.adminNoticeTotal;
       },
     },
+    
   },
   mounted() {
     // console.log(this.userInfo);
@@ -253,6 +254,7 @@ export default {
         this.$socket.emit("loginOut", {
           userId: this.userInfo.id,
         });
+        this.$router.push('/')
         // 清除token、vuex中的该用户的信息
         removeToken()
         removeItem('svg')
@@ -260,7 +262,7 @@ export default {
         store.commit('user/RESET_STATE')
         store.commit('notice/RESET_STATE')
         store.commit('like/SET_LIKELIST',[])
-        this.$router.push('/')
+        
       } else if (key === "3") {
         window.open("https://github.com/zhangyiabc/design-reception");
       } else if (key === "2") {
@@ -277,9 +279,14 @@ export default {
       }
       // this.isShowLogin = false;
       this.$store.dispatch("setting/setShow", false);
+      this.showLogin = true
     },
     handleToRegister(){
       this.showLogin = false
+    },
+    handleRegister(){
+      this.showLogin = true
+
     }
   },
 };
