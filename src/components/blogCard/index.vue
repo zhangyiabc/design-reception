@@ -44,6 +44,7 @@
 /**
  * 判断这篇文章用户有没有点赞
  */
+import { mapGetters } from 'vuex'
 import { like as likeApi, cancelLike } from "@/apis/like";
 import moment from "moment";
 export default {
@@ -51,6 +52,11 @@ export default {
     formatTime(time) {
       return moment(time).format("yyyy-MM-DD h:mm:ss");
     },
+  },
+  computed:{
+    ...mapGetters({ 
+      userInfo: "info",
+    }),
   },
   data() {
     return {
@@ -117,6 +123,16 @@ export default {
     handleLike(e) {
       e.stopPropagation();
       // console.log("点击了喜欢");
+      // 判断用户是否登录
+      // 没登录不可以点赞
+      if(Object.keys(this.userInfo).length == 0){
+        // this.$message.warn('请先登录')
+        this.$message.warn('请先登录', [0.5], () => {
+          this.$store.dispatch("setting/setShow", true);
+        })
+        
+        return 
+      }
       // 调接口，改样式
       // vuex中添加一项
       if (this.isLike) {

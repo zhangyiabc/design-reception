@@ -180,7 +180,7 @@ export default {
   mounted() {
     // console.log(this.userInfo);
     this.count = store.getters.userNoticeTotal + store.getters.adminNoticeTotal;
-    console.log(this.count);
+    // console.log(this.count);
     this.formatAvatar(this.avatar);
   },
   data() {
@@ -234,11 +234,27 @@ export default {
       });
     },
     handleClick() {
+      // 判断是否登录
+      // 没有登录不让进
+      if(!this.userInfo.id){
+        this.$message.warn('请先登录', [0.5], () => {
+          this.$store.dispatch("setting/setShow", true);
+        })
+        return
+      }
       this.$router.push({
         name: "Editor",
       });
     },
     handleGotoNotice() {
+      // 判断是否登录
+      // 没有登录不让进
+      if(!this.userInfo.id){
+        this.$message.warn('请先登录', [0.5], () => {
+          this.$store.dispatch("setting/setShow", true);
+        })
+        return
+      }
       this.$router.push({
         path: "/notice",
       });

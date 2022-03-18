@@ -52,8 +52,17 @@
               <div class="user-info">
                 <div class="left-info">
                   <div class="avatar">
-                    <a-avatar v-if="!isSvg"  :size="64" icon="user" :src="avatar" />
-                    <div v-if="isSvg" :style="{width:'64px',height:'64px'}" v-html="svg"></div>
+                    <a-avatar
+                      v-if="!isSvg"
+                      :size="64"
+                      icon="user"
+                      :src="avatar"
+                    />
+                    <div
+                      v-if="isSvg"
+                      :style="{ width: '64px', height: '64px' }"
+                      v-html="svg"
+                    ></div>
                   </div>
                   <div class="info-detail">
                     <p class="author">{{ blog.User.author }}</p>
@@ -98,7 +107,11 @@
               <div class="right-user-info">
                 <div class="avatar">
                   <a-avatar v-if="!isSvg" :size="60" :src="avatar" />
-                  <div v-if="isSvg" :style="{width:'60px',height:'60px'}"  v-html="svg"></div>
+                  <div
+                    v-if="isSvg"
+                    :style="{ width: '60px', height: '60px' }"
+                    v-html="svg"
+                  ></div>
                 </div>
                 <div class="avatar-right">
                   <p>{{ blog.User.author }}</p>
@@ -179,8 +192,8 @@ export default {
     blogShow() {
       return Object.keys(this.blog).length > 0 && this.avatar;
     },
-    myAvatar(){
-      return this.$store.getters.info.UserInfo.avatar || ''
+    myAvatar() {
+      return this.$store.getters?.info?.UserInfo?.avatar || "";
     },
     tag() {
       return this.blog.Label.tag;
@@ -204,7 +217,7 @@ export default {
   },
   created() {
     this.articleId = this.$route.params.id;
-    
+
     if (this.blogList.length > 0) {
       this.blog = this.getNowArticle(this.blogList, this.articleId);
       this.commentReq.articleId = this.blog.id;
@@ -233,7 +246,7 @@ export default {
     this.commentReq.articleId = this.blog.id;
     const result = this.isHas(this.likeList, this.articleId);
     this.likeed = result;
-    console.log(this.likeed)
+    console.log(this.likeed);
   },
   watch: {
     likeList: {
@@ -242,15 +255,15 @@ export default {
         this.likeed = result;
       },
     },
-    avatar:{
-      handler:function(){
+    avatar: {
+      handler: function () {
         this.formatAvatar(this.avatar);
-      }
-    }
+      },
+    },
   },
   data() {
     return {
-      svg:'',
+      svg: "",
       articleId: "",
       likeed: false,
       blog: {},
@@ -277,13 +290,13 @@ export default {
   },
   methods: {
     formatAvatar(avatar) {
-      if(!this.isSvg){
-        return 
+      if (!this.isSvg) {
+        return;
       }
-      const svg = getItem('svg')
-      if(svg){
-        this.svg = svg
-        return 
+      const svg = getItem("svg");
+      if (svg) {
+        this.svg = svg;
+        return;
       }
       fetch(avatar)
         .then((res) => res.text())
@@ -366,6 +379,15 @@ export default {
       });
     },
     handleLikeClick() {
+      // 判断用户是否登录
+      // 没有登录弹出登录框
+      if (!this.myAvatar) {
+        // 弹出登录框
+        this.$message.warn('请先登录', [0.5], () => {
+          this.$store.dispatch("setting/setShow", true);
+        })
+        return;
+      }
       // 调接口，改样式
       // vuex中添加一项
       if (this.likeed) {
