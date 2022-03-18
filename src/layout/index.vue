@@ -47,20 +47,21 @@ export default {
 .layout {
   height: 100%;
   background-color: rgb(244, 245, 245);
+  .header {
+    height: 60px;
+    background-color: #fff;
+  }
+  .middle {
+    height: calc(100% - 60px);
+    background-color: rgb(244, 245, 245);
+  }
 }
-.header {
-  height: 60px;
-  background-color: #fff;
-}
-.middle {
-  height: calc(100% - 60px);
-  background-color: rgb(244, 245, 245);
-}
+
 #components-back-top-demo-custom .ant-back-top.one {
   right: 30px;
   bottom: 100px;
 }
-#components-back-top-demo-custom .ant-back-top{
+#components-back-top-demo-custom .ant-back-top {
   cursor: pointer;
 }
 #components-back-top-demo-custom .ant-back-top-inner {

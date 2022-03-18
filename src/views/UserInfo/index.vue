@@ -9,7 +9,7 @@
             </div>
             <div class="tabHeader">
               <a-tabs default-active-key="1">
-                <a-tab-pane key="1" >
+                <a-tab-pane key="1">
                   <span slot="tab">
                     <a-icon type="read" />
                     文章
@@ -40,7 +40,28 @@
             </div>
           </div>
           <div class="contentRight">
-            <div class="achievement">成就</div>
+            <div class="achievement">
+              <div class="header">
+                <span>个人成就</span>
+              </div>
+              <div class="content">
+                <div class="rank">
+                  <i class="icon-chengjiu iconfont" /> 该作者共发布<span>{{
+                   UserInfo.count
+                  }}</span
+                  >篇文章
+                </div>
+                <div class="good" v-if="UserInfo.count > 10">
+                  <i class="icon-shangsheng iconfont"></i>
+                  优秀创作者
+                  <span></span>
+                </div>
+                <div class="join">
+                  <i class="iconfont icon-jiaruwomen"></i>
+                  加入于 ——{{UserInfo.createdAt | formatTime}}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -55,7 +76,13 @@ import BlogCard from "@/components/blogCard/index.vue";
 import UserHeader from "@/components/UserHeader";
 import { getAllArticle as getAllArticleApi } from "@/apis/article";
 import { getUserDetail } from "@/apis/user";
+import moment from 'moment'
 export default {
+  filters:{
+    formatTime(time){
+      return moment(time).format("yyyy-MM-DD");
+    }
+  },
   components: {
     Layout,
     UserHeader,
@@ -94,7 +121,7 @@ export default {
     },
     handleBlogPageChange(page) {
       this.getBlogReq.page = page;
-      this.getAllArticle()
+      this.getAllArticle();
     },
     getAllArticle() {
       this.isLoading = true;
@@ -127,20 +154,60 @@ export default {
         background-color: #fff;
       }
     }
-    .tabHeader{
+    .tabHeader {
       margin-top: 10px;
       background-color: #fff;
     }
     .contentRight {
       width: 24%;
-      background-color: palegoldenrod;
+      // background-color: palegoldenrod;
+      .achievement {
+        height: 185px;
+        background-color: #fff;
+        .header {
+          height: 50px;
+          padding: 0px 12px;
+          box-sizing: border-box;
+          border-bottom: 1px solid rgba(230, 230, 231, 0.5);
+          span {
+            font-size: 16px;
+            line-height: 50px;
+            font-weight: 600;
+            color: #31445b;
+          }
+        }
+      }
+      .content{
+        margin-top: 10px;
+        padding: 0 10px;
+        div{
+          height: 30px;
+          font-size: 15px;
+          margin-bottom: 10px;
+          i{
+            margin-right: 5px;
+            color: #fff;
+            display: inline-block;
+            text-align: center;
+            line-height: 28px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: rgb(87, 161, 158);
+          }
+          span{
+            font-size: 16px;
+            margin: 0 2px;
+          }
+        }
+      }
     }
     .loading {
       margin-top: 30px;
       display: flex;
       justify-content: center;
     }
-    .footer{
+    .footer {
       margin-top: 10px;
       display: flex;
       justify-content: flex-end;

@@ -90,7 +90,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import url("//at.alicdn.com/t/font_2804341_ncgv9nsirnk.css");
+@import url("//at.alicdn.com/t/font_2804341_big5hs3d5cj.css");
 .userHeader {
   padding: 30px;
   .top {

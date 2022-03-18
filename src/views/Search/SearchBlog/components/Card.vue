@@ -183,7 +183,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import url("//at.alicdn.com/t/font_2804341_ncgv9nsirnk.css");
+@import url("//at.alicdn.com/t/font_2804341_big5hs3d5cj.css");
 .blog-card {
   padding: 10px;
   padding-bottom: 0;

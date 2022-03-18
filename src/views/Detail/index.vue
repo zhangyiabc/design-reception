@@ -474,7 +474,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import url("//at.alicdn.com/t/font_2804341_ncgv9nsirnk.css");
+@import url("//at.alicdn.com/t/font_2804341_big5hs3d5cj.css");
 .detail {
   scroll-behavior: smooth;
   background-color: rgb(244, 245, 245);
