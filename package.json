@@ -17,6 +17,7 @@
     "highlight.js": "^11.4.0",
     "html2json": "^1.0.2",
     "js-cookie": "^3.0.1",
+    "md5": "^2.3.0",
     "moment": "^2.29.1",
     "socket.io-client": "^4.4.1",
     "vue": "^2.6.11",
