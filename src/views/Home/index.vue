@@ -431,14 +431,14 @@ export default {
         &.info {
           font-size: 17px;
           color: #555;
-          font-family: "华文楷体";
+          font-family: "演示秋鸿楷体";
           font-weight: bold;
         }
       }
       div {
         font-size: 17px;
 
-        font-family: "华文楷体";
+        font-family: "演示秋鸿楷体";
         position: absolute;
         right: 40px;
         font-weight: bold;

@@ -2,7 +2,7 @@ import request from '@/utils/request'
 import md5 from 'md5'
 
 export function login(data) {
-  data.password = md5(data.password)
+  // data.password = md5(data.password)
   return request({
     url: "/api/user/login",
     method: "POST",

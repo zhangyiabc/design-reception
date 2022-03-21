@@ -93,6 +93,7 @@
                           <a-pagination
                             size="small"
                             :defaultPageSize="5"
+                            :current="getBlogReq.page"
                             :total="getBlogReq.total"
                             @change="handleBlogPageChange"
                           />
@@ -118,6 +119,7 @@
                         <div class="footer">
                           <a-pagination
                             size="small"
+                            :current="getLikeReq.page"
                             :defaultPageSize="5"
                             :total="getLikeReq.total"
                             @change="handleLikePageChange"
@@ -140,7 +142,21 @@
             </div>
           </div>
           <div class="contentRight">
-            <div class="achievement">成就</div>
+            <div class="title">我的个人信息</div>
+            <div class="form">
+              <div class="tel">
+                <span>电 话：</span>{{ UserInfo.UserInfo.tel }}
+              </div>
+              <div class="email">
+                <span>邮 箱：</span>{{ UserInfo.UserInfo.email }}
+              </div>
+              <div class="sex">
+                <span>性 别：</span>{{ UserInfo.UserInfo.sex | formatSex }}
+              </div>
+              <div class="join">
+                <span>加 入 时 间：</span>{{ UserInfo.UserInfo.createdAt | formatTime }}
+              </div>
+            </div>
           </div>
         </div>
       </template>
@@ -161,7 +177,16 @@ import { mapGetters } from "vuex";
 import UserHeader from "@/components/UserHeader";
 import { getAllArticle, deleteArticle } from "@/apis/article";
 import { getItem } from "@/utils/auth";
+import moment from 'moment'
 export default {
+  filters: {
+    formatSex(sex) {
+      return sex == "1" ? "男" : "女";
+    },
+    formatTime(time) {
+      return moment.utc(time).format("yyyy-MM-DD h:mm:ss");
+    },
+  },
   components: {
     Layout,
     UserHeader,
@@ -201,7 +226,6 @@ export default {
   },
   created() {
     this.getMyArticle();
-    // this.initLike();
   },
   methods: {
     handleSubmit(e) {
@@ -218,6 +242,7 @@ export default {
     },
     handleSelectChange(value) {
       console.log(value);
+      this.getBlogReq.page = 1;
     },
     handleModify() {
       console.log("点击了修改个人信息");
@@ -243,9 +268,9 @@ export default {
     initLike() {
       this.likeLoading = true;
       const temp = this.$store.getters.likeList || [];
-      if(temp.length == 0){
-        this.likeLoading = false
-        return
+      if (temp.length == 0) {
+        this.likeLoading = false;
+        return;
       }
       this.getLikeReq.total = temp.length;
       for (let i = 0; i < temp.length; i++) {
@@ -285,12 +310,12 @@ export default {
 
 <style lang="scss" scoped>
 .persional-container {
-  width: 56%;
+  width: 65%;
   margin: 20px auto;
   display: flex;
   justify-content: space-between;
   .contentLeft {
-    width: 74%;
+    width: 70%;
     .userInfo {
       background-color: #fff;
     }
@@ -320,8 +345,19 @@ export default {
     }
   }
   .contentRight {
-    width: 24%;
-    background-color: palegoldenrod;
+    width: 28%;
+    height: 300px;
+    background-color: #fff;
+    padding: 20px 10px;
+    border-radius: 4px;
+    .title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    div{
+      margin-bottom: 10px;
+    }
   }
   .loading {
     display: flex;
