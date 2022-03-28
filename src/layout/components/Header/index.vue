@@ -325,7 +325,7 @@ export default {
       font-weight: bold;
       letter-spacing: 10px;
       color: #666;
-      font-family: "华文新魏";
+      font-family: "演示秋鸿楷体";
     }
   }
   .content {

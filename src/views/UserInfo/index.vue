@@ -149,7 +149,7 @@ export default {
     padding-bottom: 20px;
     .contentLeft {
       background-color: #fff;
-      width: 74%;
+      width: 70%;
       .userInfo {
         background-color: #fff;
       }
@@ -159,7 +159,7 @@ export default {
       background-color: #fff;
     }
     .contentRight {
-      width: 24%;
+      width: 28%;
       // background-color: palegoldenrod;
       .achievement {
         height: 185px;

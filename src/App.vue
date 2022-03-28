@@ -18,7 +18,7 @@ export default {
 <style lang="scss">
 @font-face {
   font-family: "ali";
-  src: url("./assets/font/ali.ttf");
+  src: url("./assets/font/阿里.ttf");
 }
 @font-face {
   font-family: '演示秋鸿楷体';

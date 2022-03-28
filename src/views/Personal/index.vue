@@ -154,13 +154,22 @@
                 <span>性 别：</span>{{ UserInfo.UserInfo.sex | formatSex }}
               </div>
               <div class="join">
-                <span>加 入 时 间：</span>{{ UserInfo.UserInfo.createdAt | formatTime }}
+                <span>加 入 时 间：</span
+                >{{ UserInfo.UserInfo.createdAt | formatTime }}
               </div>
             </div>
           </div>
         </div>
       </template>
     </Layout>
+    <a-modal
+      v-model="visible"
+      title="修改个人信息"
+      @ok="handleOk"
+      :footer="null"
+    >
+      <Modify v-if="visible" :info="modifyInfo" />
+    </a-modal>
   </div>
 </template>
 
@@ -171,13 +180,14 @@
  */
 const imgSrc = require("@/assets/empty.png");
 import Layout from "@/layout";
+import Modify from "./Modify";
 import BlogCard from "./Card/BlogCard.vue";
 import LikeCard from "./Card/LikeCard.vue";
 import { mapGetters } from "vuex";
 import UserHeader from "@/components/UserHeader";
 import { getAllArticle, deleteArticle } from "@/apis/article";
 import { getItem } from "@/utils/auth";
-import moment from 'moment'
+import moment from "moment";
 export default {
   filters: {
     formatSex(sex) {
@@ -192,6 +202,7 @@ export default {
     UserHeader,
     BlogCard,
     LikeCard,
+    Modify,
   },
   computed: {
     ...mapGetters({
@@ -200,6 +211,7 @@ export default {
   },
   data() {
     return {
+      visible: false,
       imgSrc,
       form: this.$form.createForm(this, { name: "coordinated" }),
       blogList: [],
@@ -221,6 +233,9 @@ export default {
         size: 5,
         userId: "",
         total: 0,
+      },
+      modifyInfo: {
+        
       },
     };
   },
@@ -245,7 +260,23 @@ export default {
       this.getBlogReq.page = 1;
     },
     handleModify() {
-      console.log("点击了修改个人信息");
+      // 设置modifyInfo的属性
+      this.modifyInfo = {
+        author: this.UserInfo.author,
+        sex: this.UserInfo.UserInfo.sex,
+        tel: this.UserInfo.UserInfo.tel,
+        email: this.UserInfo.UserInfo.email,
+        autograph: this.UserInfo.UserInfo.autograph,
+        username: this.UserInfo.username,
+        id: this.UserInfo.id,
+        avatar: this.UserInfo.UserInfo.avatar,
+        password:"*********"
+      };
+      this.visible = true;
+      // console.log("点击了修改个人信息");
+    },
+    handleOk() {
+      this.visible = false;
     },
     getMyArticle() {
       this.blogLoading = true;
@@ -355,7 +386,7 @@ export default {
       font-weight: 700;
       margin-bottom: 10px;
     }
-    div{
+    div {
       margin-bottom: 10px;
     }
   }
