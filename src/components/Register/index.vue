@@ -12,14 +12,14 @@
           :wrapper-col="{ span: 14 }"
           @submit="handleSubmit"
         >
-          <a-form-item label="author">
+          <a-form-item label="昵称">
             <a-input
               autocomplete="nope"
               placeholder="请输入您的昵称"
               v-decorator="['author', validateRulesObj.author]"
             />
           </a-form-item>
-          <a-form-item label="username">
+          <a-form-item label="用户名">
             <a-input
               placeholder="请输入用户名"
               autocomplete="off"
@@ -27,7 +27,7 @@
             >
             </a-input>
           </a-form-item>
-          <a-form-item label="password" name="password">
+          <a-form-item label="密码" name="password">
             <a-input-password
               type="password"
               autocomplete="new-password"
@@ -36,7 +36,7 @@
             />
           </a-form-item>
           <a-form-item :wrapper-col="{ span: 12, offset: 5 }">
-            <a-button type="primary" html-type="submit"> Submit </a-button>
+            <a-button type="primary" html-type="submit"> 注册 </a-button>
           </a-form-item>
         </a-form>
       </div>

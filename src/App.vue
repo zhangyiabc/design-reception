@@ -16,6 +16,7 @@ export default {
 };
 </script>
 <style lang="scss">
+
 @font-face {
   font-family: "ali";
   src: url("./assets/font/阿里.ttf");

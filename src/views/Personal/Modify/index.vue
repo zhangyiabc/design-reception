@@ -12,6 +12,7 @@
         :colon="false"
         :label-col="{ span: 5 }"
         :wrapper-col="{ span: 12 }"
+        style="marginBottom:10px"
       >
         <!-- name="avatar" -->
         点击头像即可上传
@@ -30,10 +31,10 @@
           </div>
         </a-upload>
       </a-form-item>
-      <a-form-item label="昵称" name="author">
+      <a-form-item label="昵称" name="author" style="marginBottom:10px">
         <a-input v-decorator="['author', validateRulesObj.author]" />
       </a-form-item>
-      <a-form-item label="密码" name="password">
+      <a-form-item label="密码" name="password" style="marginBottom:10px">
         <a-input-password
           type="password"
           autocomplete="new-password"
@@ -41,37 +42,34 @@
           v-decorator="['password', validateRulesObj.password]"
         />
       </a-form-item>
-      <a-form-item label="性别" name="sex">
+      <a-form-item label="性别" name="sex" style="marginBottom:10px">
         <a-radio-group v-decorator="['sex']" @change="handleSelectChange">
           <a-radio value="1"> 男 </a-radio>
           <a-radio value="0"> 女 </a-radio>
         </a-radio-group>
       </a-form-item>
-      <a-form-item label="邮箱" name="email">
+      <a-form-item label="邮箱" name="email" style="marginBottom:10px">
         <a-input
           v-decorator="[
             'email',
-            { rules: [{ required: true, message: '请输入邮箱' }] },
           ]"
         />
       </a-form-item>
-      <a-form-item label="个性签名" name="autograph">
+      <a-form-item label="个性签名" name="autograph" style="marginBottom:10px">
         <a-input
           v-decorator="[
             'autograph',
-            { rules: [{ required: true, message: '请输入个性签名' }] },
           ]"
         />
       </a-form-item>
-      <a-form-item label="电话" name="tel">
+      <a-form-item label="电话" name="tel" style="marginBottom:10px">
         <a-input
           v-decorator="[
             'tel',
-            { rules: [{ required: true, message: '请输入电话号码' }] },
           ]"
         />
       </a-form-item>
-      <a-form-item :wrapper-col="{ span: 12, offset: 5 }">
+      <a-form-item :wrapper-col="{ span: 12, offset: 5 }" style="marginBottom:5px">
         <a-button type="primary" html-type="submit"> 确定修改 </a-button>
       </a-form-item>
     </a-form>

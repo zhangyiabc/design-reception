@@ -22,25 +22,26 @@ module.exports = {
     proxy: {
       '/socket.io': {
         // target: 'http://192.168.63.218:8021',
-        target: 'http://localhost:8021',
+        target: 'http://121.40.140.122:8021',
         ws: true,
         changeOrigin: true
       },
       '/sockjs-node': {
         // target: 'http://192.168.63.218:8021',
-        target: 'http://localhost:8021',
+        target: 'http://121.40.140.122:8021',
         ws: false,
         changeOrigin: true
       },
       '/api': {
         // target: 'http://192.168.63.218:6789',
-        target: 'http://localhost:6789',
+        target: 'http://121.40.140.122:8789',
         changeOrigin: true,
       },
 
 
     }
   },
+
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.
@@ -49,6 +50,14 @@ module.exports = {
       alias: {
         '@': resolve('src')
       }
+    },
+    module:{
+      rules:[
+        {
+          test:/\.(otf|svg|ttf|woff|woff2)\w*/,
+          loader:"url-loader?limit=10000"
+        }
+      ],
     },
 
   },
