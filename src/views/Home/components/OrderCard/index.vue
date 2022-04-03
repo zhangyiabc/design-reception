@@ -1,6 +1,6 @@
 <template>
   <div class="orderCard">
-    <div class="content">
+    <div class="content" @click="handleClick">
       <div class="left">
         <a-avatar v-if="!isSvg" :size="45" icon="user" :src="avatar" />
         <div
@@ -72,6 +72,15 @@ export default {
           this.svg = svg;
         });
     },
+    handleClick(){
+      this.$router.push({
+        path: "/user",
+        name: "UserInfo",
+        params: {
+          id: this.Info.id,
+        },
+      });
+    }
   },
 };
 </script>
@@ -85,6 +94,7 @@ export default {
     width: 100%;
     display: flex;
     justify-content: space-between;
+    cursor: pointer;
     .left {
       width: 18%;
     }

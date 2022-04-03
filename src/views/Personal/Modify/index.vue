@@ -12,7 +12,7 @@
         :colon="false"
         :label-col="{ span: 5 }"
         :wrapper-col="{ span: 12 }"
-        style="marginBottom:10px"
+        style="marginBottom: 10px"
       >
         <!-- name="avatar" -->
         点击头像即可上传
@@ -24,17 +24,23 @@
           :before-upload="beforeUpload"
           @change="handleChange"
         >
-          <img v-if="imageUrl" :src="imageUrl" alt="avatar" width="100%" />
-          <div v-else>
+          <img
+            v-if="imageUrl && !isSvg"
+            :src="imageUrl"
+            alt="avatar"
+            width="100%"
+          />
+          <div v-if="isSvg" :style="{ width: '100%' }" v-html="svg"></div>
+          <div v-if="!imageUrl">
             <a-icon :type="loading ? 'loading' : 'plus'" />
             <div class="ant-upload-text">Upload</div>
           </div>
         </a-upload>
       </a-form-item>
-      <a-form-item label="昵称" name="author" style="marginBottom:10px">
+      <a-form-item label="昵称" name="author" style="marginBottom: 10px">
         <a-input v-decorator="['author', validateRulesObj.author]" />
       </a-form-item>
-      <a-form-item label="密码" name="password" style="marginBottom:10px">
+      <a-form-item label="密码" name="password" style="marginBottom: 10px">
         <a-input-password
           type="password"
           autocomplete="new-password"
@@ -42,34 +48,25 @@
           v-decorator="['password', validateRulesObj.password]"
         />
       </a-form-item>
-      <a-form-item label="性别" name="sex" style="marginBottom:10px">
+      <a-form-item label="性别" name="sex" style="marginBottom: 10px">
         <a-radio-group v-decorator="['sex']" @change="handleSelectChange">
           <a-radio value="1"> 男 </a-radio>
           <a-radio value="0"> 女 </a-radio>
         </a-radio-group>
       </a-form-item>
-      <a-form-item label="邮箱" name="email" style="marginBottom:10px">
-        <a-input
-          v-decorator="[
-            'email',
-          ]"
-        />
+      <a-form-item label="邮箱" name="email" style="marginBottom: 10px">
+        <a-input v-decorator="['email']" />
       </a-form-item>
-      <a-form-item label="个性签名" name="autograph" style="marginBottom:10px">
-        <a-input
-          v-decorator="[
-            'autograph',
-          ]"
-        />
+      <a-form-item label="个性签名" name="autograph" style="marginBottom: 10px">
+        <a-input v-decorator="['autograph']" />
       </a-form-item>
-      <a-form-item label="电话" name="tel" style="marginBottom:10px">
-        <a-input
-          v-decorator="[
-            'tel',
-          ]"
-        />
+      <a-form-item label="电话" name="tel" style="marginBottom: 10px">
+        <a-input v-decorator="['tel']" />
       </a-form-item>
-      <a-form-item :wrapper-col="{ span: 12, offset: 5 }" style="marginBottom:5px">
+      <a-form-item
+        :wrapper-col="{ span: 12, offset: 5 }"
+        style="marginBottom: 5px"
+      >
         <a-button type="primary" html-type="submit"> 确定修改 </a-button>
       </a-form-item>
     </a-form>
@@ -77,7 +74,9 @@
 </template>
 
 <script>
+import {updateUserInfo} from '@/apis/user.js'
 import { upload } from "@/apis/upload.js";
+import md5 from 'md5'
 export default {
   props: {
     info: {
@@ -87,6 +86,7 @@ export default {
   },
   data() {
     return {
+      svg: "",
       sex: "1",
       formLayout: "horizontal",
       form: this.$form.createForm(this, { name: "coordinated" }),
@@ -143,6 +143,22 @@ export default {
       },
     };
   },
+  computed: {
+    isSvg() {
+      if (
+        this.imageUrl &&
+        this.imageUrl.indexOf("https://api.multiavatar.com/") == 0
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  },
+  created() {
+    // console.log(this.info);
+    this.formatAvatar(this.imageUrl);
+  },
   mounted() {
     // console.log(this.info)
     this.form.setFieldsValue(this.info);
@@ -152,7 +168,14 @@ export default {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          console.log(values);
+          if(values.password === '*********'){
+            delete values.password
+          }
+          values.password = md5(values.password)
+          values.avatar = this.imageUrl
+          updateUserInfo(values).then(res => {
+            console.log(res)
+          })
         }
       });
     },
@@ -160,6 +183,16 @@ export default {
       this.form.setFieldsValue({
         sex: value.target.value,
       });
+    },
+    formatAvatar(avatar) {
+      if (!this.isSvg) {
+        return;
+      }
+      fetch(avatar)
+        .then((res) => res.text())
+        .then((svg) => {
+          this.svg = svg;
+        });
     },
     handleChange(info) {
       if (info.file.status === "uploading") {
@@ -192,6 +225,7 @@ export default {
       formData.append("name", this.$store.getters.info.username);
       upload(formData).then((res) => {
         this.imageUrl = res.data;
+        this.loading = false
       });
     },
   },

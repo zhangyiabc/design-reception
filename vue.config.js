@@ -5,8 +5,16 @@ function resolve(dir) {
 
 const port = 9526
 
-const name = 'zhang yi'
+// const name = 'zhang yi'
 module.exports = {
+  chainWebpack: config => {
+    config
+      .plugin('html')
+      .tap(args => {
+        args[0]['title'] = '知识星球' 
+        return [...args]
+      })
+  },
   runtimeCompiler: true,
   devServer: {
     
@@ -22,13 +30,13 @@ module.exports = {
     proxy: {
       '/socket.io': {
         // target: 'http://192.168.63.218:8021',
-        target: 'http://121.40.140.122:8021',
+        target: 'http://www.zyd112.xyz:8021',
         ws: true,
         changeOrigin: true
       },
       '/sockjs-node': {
         // target: 'http://192.168.63.218:8021',
-        target: 'http://121.40.140.122:8021',
+        target: 'http://www.zyd112.xyz:8021',
         ws: false,
         changeOrigin: true
       },
@@ -45,7 +53,7 @@ module.exports = {
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.
-    name: name,
+    name: '知识星球',
     resolve: {
       alias: {
         '@': resolve('src')
@@ -59,6 +67,13 @@ module.exports = {
         }
       ],
     },
-
+    // chainWebpack: config =>{
+    //   config.plugin('html')
+    //     .tap(args => {
+    //       args[0].title = "知识星球";
+    //       return args;
+    //     })
+    // }
+    
   },
 }

@@ -10,7 +10,7 @@ const socketOptions = {
 Vue.use(
   new VueSocketIO({
     // debug: true,   // debug调试，生产建议关闭
-    connection: SocketIO("http://localhost:8021", socketOptions),
+    connection: SocketIO("https://www.zyd112.xyz", socketOptions),
     // allowEIO3:true,
     // extraHeaders: {
     //   'Access-Control-Allow-Credentials':true
