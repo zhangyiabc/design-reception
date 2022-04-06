@@ -59,14 +59,14 @@ module.exports = {
         '@': resolve('src')
       }
     },
-    module:{
-      rules:[
-        {
-          test:/\.(otf|svg|ttf|woff|woff2)\w*/,
-          loader:"url-loader?limit=10000"
-        }
-      ],
-    },
+    // module:{
+    //   rules:[
+    //     {
+    //       test:/\.(otf|svg|ttf|woff|woff2)\w*/,
+    //       loader:"url-loader?limit=10000"
+    //     }
+    //   ],
+    // },
     // chainWebpack: config =>{
     //   config.plugin('html')
     //     .tap(args => {
