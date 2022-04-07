@@ -277,6 +277,7 @@ export default {
     },
     handleModifyOff(){
       this.visible = false
+      this.$store.dispatch('user/whoami')
     },
     handleOk() {
       this.visible = false;
