@@ -168,7 +168,7 @@
       @ok="handleOk"
       :footer="null"
     >
-      <Modify v-if="visible" :info="modifyInfo" />
+      <Modify v-if="visible" :info="modifyInfo" @handleModify="handleModifyOff" />
     </a-modal>
   </div>
 </template>
@@ -274,6 +274,9 @@ export default {
       };
       this.visible = true;
       // console.log("点击了修改个人信息");
+    },
+    handleModifyOff(){
+      this.visible = false
     },
     handleOk() {
       this.visible = false;
