@@ -22,17 +22,14 @@ export default {
   src: url("./assets/font/ali.ttf");
 }
 @font-face {
-  font-family: '演示秋鸿楷体';
-  src: url('./assets/font/ysqhk.ttf');
+  font-family: 'st';
+  src: url('./assets/font/st.ttf');
 }
-// @font-face {
-//   font-family: '思源宋体';
-//   src: url('./assets/font/syst.otf');
-// }
 @font-face {
   font-family: '思源黑体';
   src: url('./assets/font/syht.ttf');
 }
+
 
 html,
 body {
@@ -41,7 +38,7 @@ body {
   padding: 0;
 }
 #app {
-  font-family:'ali', '思源黑体', Avenir, Arial, sans-serif;
+  font-family: '思源黑体', 'ali', Arial,'黑体';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   // text-align: center;

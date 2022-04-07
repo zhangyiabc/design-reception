@@ -322,7 +322,7 @@ export default {
             this.$message.warn("摘要不能少于20字");
             return false;
           }
-          if (!value) {
+          if (!value && key != 'cover') {
             return false;
           }
         }
