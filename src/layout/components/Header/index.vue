@@ -109,28 +109,35 @@
           <Login @handleToRegister="handleToRegister" />
         </template>
       </Mantle>
-      <Mantle v-if="!showLogin" :width="490" >
+      <Mantle v-if="!showLogin" :width="490">
         <template>
           <Register @handleRegister="handleRegister" />
         </template>
       </Mantle>
     </div>
+    <a-modal v-model="visible" title="这是我的微信" @ok="handleOk">
+      <div class="feedBack">
+        <p>欢迎您加上本网站作者的微信</p>
+        <img :src="wxSrc" alt="" />
+      </div>
+    </a-modal>
   </div>
 </template>
 
 <script>
+const wxSrc = require("@/assets/wx.jpg");
 import { setItem, getItem } from "@/utils/auth";
 import { mapGetters } from "vuex";
-import { removeItem,removeToken } from "@/utils/auth";
+import { removeItem, removeToken } from "@/utils/auth";
 import Login from "@/components/Login/index.vue";
-import Register from '@/components/Register/index.vue'
+import Register from "@/components/Register/index.vue";
 import Mantle from "@/components/Mantle/index.vue";
 import store from "@/store";
 export default {
   components: {
     Login,
     Mantle,
-    Register
+    Register,
   },
   computed: {
     ...mapGetters({
@@ -175,7 +182,6 @@ export default {
           store.getters.userNoticeTotal + store.getters.adminNoticeTotal;
       },
     },
-    
   },
   mounted() {
     // console.log(this.userInfo);
@@ -186,13 +192,18 @@ export default {
   data() {
     return {
       // isShowLogin:false,
-      showLogin:true,
+      showLogin: true,
       count: 10,
       svg: "",
+      wxSrc,
+      visible: false,
       inputText: store.getters.key || "",
     };
   },
   methods: {
+    handleOk() {
+      this.visible = false;
+    },
     formatAvatar(avatar) {
       if (!this.isSvg) {
         return;
@@ -205,7 +216,7 @@ export default {
       if (!avatar) {
         return;
       }
-      
+
       fetch(avatar)
         .then((res) => res.text())
         .then((svg) => {
@@ -236,11 +247,11 @@ export default {
     handleClick() {
       // 判断是否登录
       // 没有登录不让进
-      if(!this.userInfo.id){
-        this.$message.warn('请先登录', [0.5], () => {
+      if (!this.userInfo.id) {
+        this.$message.warn("请先登录", [0.5], () => {
           this.$store.dispatch("setting/setShow", true);
-        })
-        return
+        });
+        return;
       }
       this.$router.push({
         name: "Editor",
@@ -249,11 +260,11 @@ export default {
     handleGotoNotice() {
       // 判断是否登录
       // 没有登录不让进
-      if(!this.userInfo.id){
-        this.$message.warn('请先登录', [0.5], () => {
+      if (!this.userInfo.id) {
+        this.$message.warn("请先登录", [0.5], () => {
           this.$store.dispatch("setting/setShow", true);
-        })
-        return
+        });
+        return;
       }
       this.$router.push({
         path: "/notice",
@@ -270,15 +281,14 @@ export default {
         this.$socket.emit("loginOut", {
           userId: this.userInfo.id,
         });
-        this.$router.push('/')
+        this.$router.push("/");
         // 清除token、vuex中的该用户的信息
-        removeToken()
-        removeItem('svg')
+        removeToken();
+        removeItem("svg");
         // 设置登录状态为未登录
-        store.commit('user/RESET_STATE')
-        store.commit('notice/RESET_STATE')
-        store.commit('like/SET_LIKELIST',[])
-        
+        store.commit("user/RESET_STATE");
+        store.commit("notice/RESET_STATE");
+        store.commit("like/SET_LIKELIST", []);
       } else if (key === "3") {
         window.open("https://github.com/zhangyiabc/design-reception");
       } else if (key === "2") {
@@ -287,6 +297,7 @@ export default {
         });
       } else if (key === "4") {
         console.log("弹出我的微信二维码");
+        this.visible = true
       }
     },
     handleCancel(e) {
@@ -295,15 +306,14 @@ export default {
       }
       // this.isShowLogin = false;
       this.$store.dispatch("setting/setShow", false);
-      this.showLogin = true
+      this.showLogin = true;
     },
-    handleToRegister(){
-      this.showLogin = false
+    handleToRegister() {
+      this.showLogin = false;
     },
-    handleRegister(){
-      this.showLogin = true
-
-    }
+    handleRegister() {
+      this.showLogin = true;
+    },
   },
 };
 </script>
@@ -325,7 +335,7 @@ export default {
       font-weight: bold;
       letter-spacing: 10px;
       color: #666;
-      font-family: "演示秋鸿楷体";
+      font-family: "st";
     }
   }
   .content {
@@ -379,6 +389,21 @@ export default {
   font-size: 14.4px;
   .menus .menu-ico {
     font-size: 14.4px;
+  }
+}
+.feedBack{
+  text-align: center;
+  p{
+    padding: 0;
+    margin: 0;
+    margin-top: 10px;
+    line-height: 20px;
+    b{
+      margin: 0 2px;
+    }
+  }
+  img{
+    width: 60%;
   }
 }
 </style>
