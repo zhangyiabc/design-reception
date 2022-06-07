@@ -25,6 +25,7 @@
       </div>
       <div class="tools">
         <a-button
+          v-if="blog.review === 'reject'"
           class="btn"
           shape="circle"
           type="primary"
@@ -98,6 +99,7 @@ export default {
     },
     handleEditClick() {
       console.log("点击了编辑");
+      console.log(this.blog)
     },
     // handleDeleteClick() {
     //   console.log("点击了删除");

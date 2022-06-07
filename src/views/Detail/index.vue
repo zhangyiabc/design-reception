@@ -174,7 +174,7 @@ const html2json = require("html2json").html2json;
 export default {
   filters: {
     formatTime(time) {
-      return moment(time).format("yyyy年MM月DD日 h:mm");
+      return moment(time).utcOffset(8).format("yyyy年MM月DD日 HH:mm");
     },
   },
   components: {

@@ -56,7 +56,7 @@ export default {
       }
     },
     formatTime(time) {
-      return moment.utc(time).format("yyyy年MM月DD日 h:mm");
+      return moment(time).utcOffset(8).format("yyyy年MM月DD日 HH:mm");
     },
   },
   props: {

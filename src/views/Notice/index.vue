@@ -8,14 +8,19 @@
               <a-tab-pane key="1">
                 <span slot="tab">
                   <!-- <a-icon type="apple" /> -->
-                  <i class="iconfont icon icon-xiaoxi"></i>
-                  我的消息
+                  <a-badge :count="userNoticeTotal" title="我的消息" :offset="[10, 0]">
+                    <i class="iconfont icon icon-xiaoxi"></i>
+                    我的消息
+                  </a-badge>
                 </span>
               </a-tab-pane>
               <a-tab-pane key="2">
                 <span slot="tab">
-                  <i class="iconfont icon icon-xiaoxi1"></i>
-                  系统消息
+                  <!-- 系统消息 -->
+                    <a-badge :count="adminNoticeTotal" title="系统消息" :offset="[10, 0]">
+                      <i class="iconfont icon icon-xiaoxi1"></i>
+                      系统消息 
+                    </a-badge>
                 </span>
               </a-tab-pane>
             </a-tabs>
@@ -39,6 +44,14 @@ export default {
     Layout,
     UserNotice,
     AdminNotice
+  },
+  computed: {
+    userNoticeTotal(){
+      return this.$store.getters.userNoticeTotal || 0
+    },
+    adminNoticeTotal() {
+      return this.$store.getters.adminNoticeTotal || 0
+    }
   },
   data(){
     return {

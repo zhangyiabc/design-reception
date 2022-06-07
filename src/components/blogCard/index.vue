@@ -50,7 +50,10 @@ import moment from "moment";
 export default {
   filters: {
     formatTime(time) {
-      return moment(time).format("yyyy-MM-DD h:mm:ss");
+      // const now = moment().utc();
+      // console.log(now.from(moment(time)));
+      return moment(time).utcOffset(8).format("yyyy年MM月DD日 HH:mm");
+      // return moment.utc(time).from(now);
     },
   },
   computed:{

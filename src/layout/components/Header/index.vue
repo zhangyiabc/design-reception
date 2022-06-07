@@ -93,7 +93,7 @@
               <a-icon class=".menu-ico" type="github" /> GitHub
             </a-menu-item>
             <a-menu-item key="4">
-              <a-icon class=".menu-ico" type="wechat" /> 联系我
+              <a-icon class=".menu-ico" type="wechat" /> 联系本站作者
             </a-menu-item>
             <a-menu-divider />
             <a-menu-item key="5">

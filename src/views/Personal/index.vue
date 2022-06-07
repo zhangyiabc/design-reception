@@ -155,7 +155,7 @@
               </div>
               <div class="join">
                 <span>加 入 时 间：</span
-                >{{ UserInfo.UserInfo.createdAt | formatTime }}
+                >{{ UserInfo.createdAt | formatTime }}
               </div>
             </div>
           </div>
@@ -194,7 +194,7 @@ export default {
       return sex == "1" ? "男" : "女";
     },
     formatTime(time) {
-      return moment.utc(time).format("yyyy-MM-DD h:mm:ss");
+      return moment(time).utcOffset(8).format("yyyy-MM-DD hh:mm:ss");
     },
   },
   components: {

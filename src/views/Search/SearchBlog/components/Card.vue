@@ -49,7 +49,7 @@ import moment from "moment";
 export default {
   filters: {
     formatTime(time) {
-      return moment(time).format("yyyy-MM-DD h:mm:ss");
+      return moment(time).utcOffset(8).format("yyyy年MM月DD日 HH:mm");
     },
   },
   data() {
